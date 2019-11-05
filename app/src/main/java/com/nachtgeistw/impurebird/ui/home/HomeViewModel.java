@@ -4,8 +4,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.twitter.sdk.android.tweetui.TweetTimelineRecyclerViewAdapter;
-
 public class HomeViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
@@ -18,7 +16,4 @@ public class HomeViewModel extends ViewModel {
     public LiveData<String> getText() {
         return mText;
     }
-
-    TweetTimelineRecyclerViewAdapter recyclerViewAdapter = new TweetTimelineRecyclerViewAdapter();
-
 }

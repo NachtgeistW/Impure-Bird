@@ -3,7 +3,9 @@ package com.nachtgeistw.impurebird;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -12,12 +14,14 @@ import com.twitter.sdk.android.core.DefaultLogger;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterAuthToken;
 import com.twitter.sdk.android.core.TwitterConfig;
+import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private final String CONSUMER_KEY = "3NBkXtqQHAVbEgPHXnIM09577";
     private final String CONSUMER_SECRET = "cS5v9H3K4bbNtO3KDQ9il6eVnYZkcQfEcWeQ30KG8QWfiIwL7D";
@@ -41,6 +45,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void success(Result<TwitterSession> result) {
                 Toast.makeText(getApplicationContext(), "SUCCEED", Toast.LENGTH_LONG).show();
+                TwitterSession session = TwitterCore.getInstance().getSessionManager().getActiveSession();
+                Intent intent = new Intent(LoginActivity.this, BirdMainInterface.class);
+                intent.putExtra("user_name", session.getUserName());
+                intent.putExtra("user_id", session.getUserId());
+                startActivity(intent);
+
             }
 
             @Override

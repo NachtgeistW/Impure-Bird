@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -28,14 +29,14 @@ public class LoginActivity extends Activity {
      * consumer key and secret
      */
     static String TWITTER_CONSUMER_KEY = "3NBkXtqQHAVbEgPHXnIM09577"; // place your
-    // consumer
+    // cosumer
     // key here
     static String TWITTER_CONSUMER_SECRET = "cS5v9H3K4bbNtO3KDQ9il6eVnYZkcQfEcWeQ30KG8QWfiIwL7D"; // place
 
     // Preference Constants
     static String PREFERENCE_NAME = "twitter_oauth";
-    static final String PREF_KEY_OAUTH_TOKEN = "oauth_token";
-    static final String PREF_KEY_OAUTH_SECRET = "oauth_token_secret";
+    static final String PREF_KEY_OAUTH_TOKEN = "access_token";
+    static final String PREF_KEY_OAUTH_SECRET = "access_token_secret";
     static final String PREF_KEY_TWITTER_LOGIN = "isTwitterLogedIn";
 
     static final String TWITTER_CALLBACK_URL = "https://project-8519450044196476085.firebaseapp.com/__/auth/handler";
@@ -47,6 +48,7 @@ public class LoginActivity extends Activity {
 
     // Login button
     Button btnShareTwitter;
+
     WebView myWebView;
 
     // Twitter
@@ -55,7 +57,7 @@ public class LoginActivity extends Activity {
     private AccessToken accessToken;
 
     // Shared Preferences
-    private static SharedPreferences tSharedPreferences;
+    private static SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +71,6 @@ public class LoginActivity extends Activity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView webView, String url) {
                 if (url != null && url.startsWith(TWITTER_CALLBACK_URL))
-                    //开一个线程进行推特登录和发推操作
                     new AfterLoginTask().execute(url);
                 else
                     webView.loadUrl(url);
@@ -78,10 +79,12 @@ public class LoginActivity extends Activity {
         });
 
         // Shared Preferences
-        tSharedPreferences = getApplicationContext().getSharedPreferences(
+        mSharedPreferences = getApplicationContext().getSharedPreferences(
                 "MyPref", 0);
 
-        //Twitter login button click event will call loginToTwitter() function
+        /**
+         * Twitter login button click event will call loginToTwitter() function
+         * */
         btnShareTwitter.setOnClickListener(arg0 -> {
             // Call login twitter function
             new LoginTask().execute();
@@ -94,8 +97,7 @@ public class LoginActivity extends Activity {
      */
     private void loginToTwitter() {
         // Check if already logged in
-        if (!isTwitterAlreadyLoggedIn()) {
-            //获取推特的授权
+        if (!isTwitterLoggedInAlready()) {
             ConfigurationBuilder builder = new ConfigurationBuilder();
             builder.setOAuthConsumerKey(TWITTER_CONSUMER_KEY);
             builder.setOAuthConsumerSecret(TWITTER_CONSUMER_SECRET);
@@ -103,32 +105,22 @@ public class LoginActivity extends Activity {
 
             TwitterFactory factory = new TwitterFactory(configuration);
             twitter = factory.getInstance();
+
             try {
                 requestToken = twitter.getOAuthRequestToken(TWITTER_CALLBACK_URL);
             } catch (TwitterException e) {
                 e.printStackTrace();
             }
+
         } else {
-            Looper.prepare();
-            // user already logged into twitter
-            Toast.makeText(getApplicationContext(),
-                    "Already Logged into twitter", Toast.LENGTH_LONG).show();
-            Looper.loop();
-//            Uri uri = Uri.parse(TWITTER_CALLBACK_URL);
-//
-//            // oAuth verifier
-//            final String verifier = uri.getQueryParameter(URL_TWITTER_OAUTH_VERIFIER);
-//            try {
-//                LoginActivity.this.accessToken = twitter.getOAuthAccessToken(requestToken, verifier);
-//            } catch (TwitterException e) {
-//                e.printStackTrace();
-//            }
-//            // Access Token
-//            Looper.prepare();
-//            Toast.makeText(getApplicationContext(), accessToken.getToken(), Toast.LENGTH_SHORT).show();
-//            // Access Token Secret
-//            Toast.makeText(getApplicationContext(), accessToken.getTokenSecret(), Toast.LENGTH_SHORT).show();
-//            Looper.loop();
+            Intent intent = new Intent(LoginActivity.this, BirdMainInterface.class);
+            String token = mSharedPreferences.getString(PREF_KEY_OAUTH_TOKEN, "");
+            String secret = mSharedPreferences.getString(PREF_KEY_OAUTH_SECRET, "");
+            intent.putExtra(PREF_KEY_OAUTH_TOKEN, token);
+            intent.putExtra(PREF_KEY_OAUTH_SECRET, secret);
+            Log.e("Twitter", "loginToTwitter: access_token: " + token);
+            startActivity(intent);
+            Log.e("Twitter", "loginToTwitter: " + "Intent started.");
         }
     }
 
@@ -136,55 +128,51 @@ public class LoginActivity extends Activity {
      * Check user already logged in your application using twitter Login flag is
      * fetched from Shared Preferences
      */
-    private boolean isTwitterAlreadyLoggedIn() {
+    private boolean isTwitterLoggedInAlready() {
         // return twitter login status from Shared Preferences
-        return tSharedPreferences.getBoolean(PREF_KEY_TWITTER_LOGIN, false);
+        return mSharedPreferences.getBoolean(PREF_KEY_TWITTER_LOGIN, false);
     }
 
-    public void handleTwitterCallback() {
-        Uri uri = Uri.parse(TWITTER_CALLBACK_URL);
+    public void handleTwitterCallback(String url) {
+
+        Uri uri = Uri.parse(url);
 
         // oAuth verifier
-        final String verifier = uri.getQueryParameter(URL_TWITTER_OAUTH_VERIFIER);
+        final String verifier = uri
+                .getQueryParameter(URL_TWITTER_OAUTH_VERIFIER);
 
         try {
+
             // Get the access token
-            LoginActivity.this.accessToken = twitter.getOAuthAccessToken(requestToken, verifier);
+            LoginActivity.this.accessToken = twitter.getOAuthAccessToken(
+                    requestToken, verifier);
 
             // Shared Preferences
-            SharedPreferences.Editor e = tSharedPreferences.edit();
+            SharedPreferences.Editor e = mSharedPreferences.edit();
 
             // After getting access token, access token secret
             // store them in application preferences
             e.putString(PREF_KEY_OAUTH_TOKEN, accessToken.getToken());
             e.putString(PREF_KEY_OAUTH_SECRET, accessToken.getTokenSecret());
-            // 存储登陆状态：true
+            // Store login status - true
             e.putBoolean(PREF_KEY_TWITTER_LOGIN, true);
             e.apply(); // save changes
 
-            ConfigurationBuilder builder = new ConfigurationBuilder();
-            builder.setOAuthConsumerKey(TWITTER_CONSUMER_KEY);
-            builder.setOAuthConsumerSecret(TWITTER_CONSUMER_SECRET);
+            Intent intent = new Intent(LoginActivity.this, BirdMainInterface.class);
+            intent.putExtra(PREF_KEY_OAUTH_TOKEN, accessToken.getToken());
+            intent.putExtra(PREF_KEY_OAUTH_SECRET, accessToken.getTokenSecret());
+            Log.d("Twitter", "handleTwitterCallback: access token: " + accessToken.getToken());
+            startActivity(intent);
+            Log.d("Twitter", "handleTwitterCallback: " + "Intent started.");
 
-            // Access Token
-            String access_token = tSharedPreferences.getString(PREF_KEY_OAUTH_TOKEN, "");
-            // Access Token Secret
-            String access_token_secret = tSharedPreferences.getString(PREF_KEY_OAUTH_SECRET, "");
-
-            AccessToken accessToken = new AccessToken(access_token, access_token_secret);
-            Twitter twitter = new TwitterFactory(builder.build()).getInstance(accessToken);
-//             Update status
-            twitter4j.Status response = twitter.updateStatus("测试🌃⚙👼🅰🏃‍⭕\nvia 不浄な白い鳥");
-
-//            Looper.prepare();
-//            Toast.makeText(getApplicationContext(), accessToken.getToken(), Toast.LENGTH_SHORT).show();
-//            Toast.makeText(getApplicationContext(), accessToken.getTokenSecret(), Toast.LENGTH_SHORT).show();
-//            Looper.loop();
-//            Intent intent = new Intent(LoginActivity.this, BirdMainInterface.class);
-//            intent.putExtra("access_token", access_token);
-//            intent.putExtra("access_token_secret", access_token_secret);
-//            startActivity(intent);
-
+//            AccessToken accessToken = new AccessToken(access_token,
+//                    access_token_secret);
+//            Twitter twitter = new TwitterFactory(builder.build())
+//                    .getInstance(accessToken);
+//
+//            // Update status
+//            twitter4j.Status response = twitter
+//                    .updateStatus("测试🌃⚙👼🅰🏃‍⭕\n via 不浄な白い鳥");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -192,6 +180,7 @@ public class LoginActivity extends Activity {
     }
 
     class LoginTask extends AsyncTask<Void, Void, Boolean> {
+
         @Override
         protected Boolean doInBackground(Void... params) {
             loginToTwitter();
@@ -200,13 +189,21 @@ public class LoginActivity extends Activity {
 
         @Override
         protected void onPostExecute(Boolean result) {
-            myWebView.loadUrl(requestToken.getAuthenticationURL());
-            myWebView.setVisibility(View.VISIBLE);
-            myWebView.requestFocus(View.FOCUS_DOWN);
+            try {
+                myWebView.loadUrl(requestToken.getAuthenticationURL());
+                myWebView.setVisibility(View.VISIBLE);
+                myWebView.requestFocus(View.FOCUS_DOWN);
+            }catch (Exception e){
+                // 获取不到 AuthenticationURL 时抛出异常的 Toast。
+                // 在中国大陆这种事情太正常了，不包会闪退
+                // 登陆不上不关本组的事
+                Toast.makeText(getApplicationContext(), R.string.get_auth_url_fail, Toast.LENGTH_LONG).show();
+            }
         }
     }
 
     class AfterLoginTask extends AsyncTask<String, Void, Boolean> {
+
         @Override
         protected void onPreExecute() {
             // TODO Auto-generated method stub
@@ -216,7 +213,7 @@ public class LoginActivity extends Activity {
         @Override
         protected Boolean doInBackground(String... params) {
             // TODO Auto-generated method stub
-            handleTwitterCallback();
+            handleTwitterCallback(params[0]);
             return true;
         }
 
@@ -224,8 +221,8 @@ public class LoginActivity extends Activity {
         protected void onPostExecute(Boolean result) {
             // TODO Auto-generated method stub
             myWebView.setVisibility(View.GONE);
-            Toast.makeText(LoginActivity.this, "Tweet Successful", Toast.LENGTH_SHORT).show();
         }
+
     }
 
     @Override
@@ -241,4 +238,5 @@ public class LoginActivity extends Activity {
         }
         super.onBackPressed();
     }
+
 }

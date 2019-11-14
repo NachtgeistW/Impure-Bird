@@ -52,7 +52,7 @@ public class BirdMainInterface extends AppCompatActivity {
         intent = getIntent();
         access_token = intent.getStringExtra(PREF_KEY_OAUTH_TOKEN);
         access_token_secret = intent.getStringExtra(PREF_KEY_OAUTH_SECRET);
-        Log.e("Twitter", "onCreate: access_token: " + access_token);
+        Log.e("Twitter", "BirdMainInterface > onCreate");
         builder.setOAuthConsumerKey(String.valueOf(R.string.consumer_key));
         builder.setOAuthConsumerSecret(String.valueOf(R.string.consumer_secret));
         accessToken = new AccessToken(access_token, access_token_secret);
@@ -97,26 +97,28 @@ public class BirdMainInterface extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... voids) {
+            Log.e("Twitter", "BirdMainInterface > SendTweet > doInBackground");
+
             try {
-//                twitter4j.Status response = twitter.updateStatus("测试🌃⚙👼🅰🏃‍⭕\n via 不浄な白い鳥");
-                twitter.updateStatus("测试🌃⚙👼🅰🏃‍⭕\n via 不浄な白い鳥");
+                twitter4j.Status response = twitter.updateStatus("测试\n@Nightwheel_C 🌃⚙👼🅰🏃‍⭕\n via 不浄な白い鳥");
+//                twitter.updateStatus("测试🌃⚙👼🅰🏃‍⭕\n via 不浄な白い鳥");
+                return true;
             } catch (TwitterException e) {
                 e.printStackTrace();
+                return false;
             }
-            return null;
         }
 
         @Override
         protected void onPostExecute(Boolean result) {
+            // 之前报错：java.lang.NullPointerException: Attempt to invoke virtual method 'boolean java.lang.Boolean.booleanValue()' on a null object reference
+            // 如何传值到result上：https://www.jianshu.com/p/817a34a5f200
+            // 当doInBackground(Params...)执行完毕并通过return语句进行返回时，这个方法就很快会被调用。返回的数据会作为参数传递到此方法中，
+            // **可以利用返回的数据来进行一些UI操作，在主线程中进行，比如说提醒任务执行的结果。**
             if (result) {
-                Looper.prepare();
                 Toast.makeText(getApplicationContext(), R.string.tweet_succeed, Toast.LENGTH_SHORT).show();
-                Looper.loop();
             } else {
-                Looper.prepare();
-                Toast.makeText(getApplicationContext(), R.string.tweet_fail, Toast.LENGTH_SHORT).show();
-                Looper.loop();
-
+                Toast.makeText(getApplicationContext(), R.string.tweet_fail, Toast.LENGTH_LONG).show();
             }
         }
     }

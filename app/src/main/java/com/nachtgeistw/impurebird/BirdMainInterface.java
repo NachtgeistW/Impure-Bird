@@ -1,6 +1,7 @@
 package com.nachtgeistw.impurebird;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -29,6 +30,9 @@ import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
 import twitter4j.conf.ConfigurationBuilder;
 
+import static com.nachtgeistw.impurebird.LoginActivity.TWITTER_CONSUMER_KEY;
+import static com.nachtgeistw.impurebird.LoginActivity.TWITTER_CONSUMER_SECRET;
+
 
 public class BirdMainInterface extends AppCompatActivity {
     static final String PREF_KEY_OAUTH_TOKEN = "access_token";
@@ -37,28 +41,36 @@ public class BirdMainInterface extends AppCompatActivity {
 
 
     private AppBarConfiguration mAppBarConfiguration;
-    //Twitter 初始化
-    Intent intent;
-    String access_token, access_token_secret;
-    ConfigurationBuilder builder = new ConfigurationBuilder();
-    AccessToken accessToken;
+    //    Intent intent;
+//    String access_token, access_token_secret;
+//    ConfigurationBuilder builder = new ConfigurationBuilder();
+//    AccessToken accessToken;
     Twitter twitter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //Twitter initial
+//        intent = getIntent();
+//        access_token = intent.getStringExtra(PREF_KEY_OAUTH_TOKEN);
+//        access_token_secret = intent.getStringExtra(PREF_KEY_OAUTH_SECRET);
+//        builder.setOAuthConsumerKey(String.valueOf(R.string.consumer_key));
+//        builder.setOAuthConsumerSecret(String.valueOf(R.string.consumer_secret));
+//        accessToken = new AccessToken(access_token, access_token_secret);
+//        twitter = new TwitterFactory(builder.build()).getInstance(accessToken);
+        SharedPreferences mSharedPreferences = LoginActivity.mSharedPreferences;
+        ConfigurationBuilder builder = new ConfigurationBuilder();
+        builder.setOAuthConsumerKey(TWITTER_CONSUMER_KEY);
+        builder.setOAuthConsumerSecret(TWITTER_CONSUMER_SECRET);
+        String access_token = mSharedPreferences.getString(PREF_KEY_OAUTH_TOKEN, "");
+        String access_token_secret = mSharedPreferences.getString(PREF_KEY_OAUTH_SECRET, "");
+        AccessToken accessToken = new AccessToken(access_token, access_token_secret);
+        twitter = new TwitterFactory(builder.build()).getInstance(accessToken);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bird_main_interface);
 
-        intent = getIntent();
-        access_token = intent.getStringExtra(PREF_KEY_OAUTH_TOKEN);
-        access_token_secret = intent.getStringExtra(PREF_KEY_OAUTH_SECRET);
-        Log.e("Twitter", "BirdMainInterface > onCreate");
-        builder.setOAuthConsumerKey(String.valueOf(R.string.consumer_key));
-        builder.setOAuthConsumerSecret(String.valueOf(R.string.consumer_secret));
-        accessToken = new AccessToken(access_token, access_token_secret);
-        twitter = new TwitterFactory(builder.build()).getInstance(accessToken);
-
-
+        //UI initial
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -94,16 +106,16 @@ public class BirdMainInterface extends AppCompatActivity {
 
     //发推的AsyncTask
     class SendTweet extends AsyncTask<Void, Integer, Boolean> {
-
         @Override
         protected Boolean doInBackground(Void... voids) {
-            Log.e("Twitter", "BirdMainInterface > SendTweet > doInBackground");
-
             try {
-                twitter4j.Status response = twitter.updateStatus("测试\n@Nightwheel_C 🌃⚙👼🅰🏃‍⭕\n via 不浄な白い鳥");
-//                twitter.updateStatus("测试🌃⚙👼🅰🏃‍⭕\n via 不浄な白い鳥");
+                Log.e("Twitter", "BirdMainInterface > SendTweet > doInBackground > true");
+//                twitter4j.Status response = twitter.updateStatus("测试\n🌃⚙👼🅰🏃‍⭕\n@Nightwheel_C\nvia 不浄な白い鳥");
+                twitter.updateStatus("测试🌃⚙👼🅰🏃‍⭕\n via 不浄な白い鳥");
                 return true;
             } catch (TwitterException e) {
+                Log.e("Twitter", "BirdMainInterface > SendTweet > doInBackground > false");
+                Log.e("Twitter", e.getErrorMessage());
                 e.printStackTrace();
                 return false;
             }

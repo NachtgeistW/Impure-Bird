@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
@@ -57,7 +56,7 @@ public class LoginActivity extends Activity {
     private AccessToken accessToken;
 
     // Shared Preferences
-    private static SharedPreferences mSharedPreferences;
+    public static SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +89,6 @@ public class LoginActivity extends Activity {
             // Call login twitter function
             new LoginTask().execute();
         });
-
     }
 
     /**
@@ -116,10 +114,10 @@ public class LoginActivity extends Activity {
 
         } else {
             Intent intent = new Intent(LoginActivity.this, BirdMainInterface.class);
-            String token = mSharedPreferences.getString(PREF_KEY_OAUTH_TOKEN, "");
-            String secret = mSharedPreferences.getString(PREF_KEY_OAUTH_SECRET, "");
-            intent.putExtra(PREF_KEY_OAUTH_TOKEN, token);
-            intent.putExtra(PREF_KEY_OAUTH_SECRET, secret);
+//            String token = mSharedPreferences.getString(PREF_KEY_OAUTH_TOKEN, "");
+//            String secret = mSharedPreferences.getString(PREF_KEY_OAUTH_SECRET, "");
+//            intent.putExtra(PREF_KEY_OAUTH_TOKEN, token);
+//            intent.putExtra(PREF_KEY_OAUTH_SECRET, secret);
             startActivity(intent);
         }
     }
@@ -142,7 +140,6 @@ public class LoginActivity extends Activity {
                 .getQueryParameter(URL_TWITTER_OAUTH_VERIFIER);
 
         try {
-
             // Get the access token
             LoginActivity.this.accessToken = twitter.getOAuthAccessToken(
                     requestToken, verifier);
@@ -159,8 +156,8 @@ public class LoginActivity extends Activity {
             e.apply(); // save changes
 
             Intent intent = new Intent(LoginActivity.this, BirdMainInterface.class);
-            intent.putExtra(PREF_KEY_OAUTH_TOKEN, accessToken.getToken());
-            intent.putExtra(PREF_KEY_OAUTH_SECRET, accessToken.getTokenSecret());
+//            intent.putExtra(PREF_KEY_OAUTH_TOKEN, accessToken.getToken());
+//            intent.putExtra(PREF_KEY_OAUTH_SECRET, accessToken.getTokenSecret());
             startActivity(intent);
         } catch (Exception e) {
             e.printStackTrace();
@@ -188,7 +185,9 @@ public class LoginActivity extends Activity {
                 // 获取不到 AuthenticationURL 时抛出异常的 Toast。
                 // 在中国大陆这种事情太正常了，不包会闪退
                 // 登陆不上不关本组的事
-                Toast.makeText(getApplicationContext(), R.string.get_auth_url_fail, Toast.LENGTH_LONG).show();
+                Log.e("Twitter", e.getMessage());
+                if (isTwitterLoggedInAlready())
+                    Toast.makeText(getApplicationContext(), R.string.get_auth_url_fail, Toast.LENGTH_LONG).show();
             }
         }
     }

@@ -19,6 +19,6 @@
     <string name="consumer_secret" translatable="false">cS5v9H3K4bbNtO3KDQ9il6eVnYZkcQfEcWeQ30KG8QWfiIwL7D</string>
     <string name="login_in_with_twitter">Login in with Twitter</string>
     <string name="get_auth_url_fail">Unable to connect to the Twitter server temporarily. Please check your network connection and try again.</string>
-    <string name="tweet_succeed">Tweet sent.</string>
+    <string name="tweet_succeed">Tweet sent succeed.</string>
     <string name="tweet_fail">Tweet sent failed. Please check your network connection and try again later.</string>
 </resources>

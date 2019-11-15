@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
@@ -57,7 +56,7 @@ public class LoginActivity extends Activity {
     private AccessToken accessToken;
 
     // Shared Preferences
-    private static SharedPreferences mSharedPreferences;
+    public static SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,16 +85,17 @@ public class LoginActivity extends Activity {
          * Twitter login button click event will call loginToTwitter() function
          * */
         btnShareTwitter.setOnClickListener(arg0 -> {
+            Log.e("Twitter", "LoginActivity > onCreate > setOnClickListener");
             // Call login twitter function
             new LoginTask().execute();
         });
-
     }
 
     /**
      * Function to login twitter
      */
     private void loginToTwitter() {
+        Log.e("Twitter", "LoginActivity > loginToTwitter");
         // Check if already logged in
         if (!isTwitterLoggedInAlready()) {
             ConfigurationBuilder builder = new ConfigurationBuilder();
@@ -114,13 +114,11 @@ public class LoginActivity extends Activity {
 
         } else {
             Intent intent = new Intent(LoginActivity.this, BirdMainInterface.class);
-            String token = mSharedPreferences.getString(PREF_KEY_OAUTH_TOKEN, "");
-            String secret = mSharedPreferences.getString(PREF_KEY_OAUTH_SECRET, "");
-            intent.putExtra(PREF_KEY_OAUTH_TOKEN, token);
-            intent.putExtra(PREF_KEY_OAUTH_SECRET, secret);
-            Log.e("Twitter", "loginToTwitter: access_token: " + token);
+//            String token = mSharedPreferences.getString(PREF_KEY_OAUTH_TOKEN, "");
+//            String secret = mSharedPreferences.getString(PREF_KEY_OAUTH_SECRET, "");
+//            intent.putExtra(PREF_KEY_OAUTH_TOKEN, token);
+//            intent.putExtra(PREF_KEY_OAUTH_SECRET, secret);
             startActivity(intent);
-            Log.e("Twitter", "loginToTwitter: " + "Intent started.");
         }
     }
 
@@ -134,7 +132,7 @@ public class LoginActivity extends Activity {
     }
 
     public void handleTwitterCallback(String url) {
-
+        Log.e("Twitter", "LoginActivity > handleTwitterCallback");
         Uri uri = Uri.parse(url);
 
         // oAuth verifier
@@ -142,7 +140,6 @@ public class LoginActivity extends Activity {
                 .getQueryParameter(URL_TWITTER_OAUTH_VERIFIER);
 
         try {
-
             // Get the access token
             LoginActivity.this.accessToken = twitter.getOAuthAccessToken(
                     requestToken, verifier);
@@ -159,21 +156,9 @@ public class LoginActivity extends Activity {
             e.apply(); // save changes
 
             Intent intent = new Intent(LoginActivity.this, BirdMainInterface.class);
-            intent.putExtra(PREF_KEY_OAUTH_TOKEN, accessToken.getToken());
-            intent.putExtra(PREF_KEY_OAUTH_SECRET, accessToken.getTokenSecret());
-            Log.d("Twitter", "handleTwitterCallback: access token: " + accessToken.getToken());
+//            intent.putExtra(PREF_KEY_OAUTH_TOKEN, accessToken.getToken());
+//            intent.putExtra(PREF_KEY_OAUTH_SECRET, accessToken.getTokenSecret());
             startActivity(intent);
-            Log.d("Twitter", "handleTwitterCallback: " + "Intent started.");
-
-//            AccessToken accessToken = new AccessToken(access_token,
-//                    access_token_secret);
-//            Twitter twitter = new TwitterFactory(builder.build())
-//                    .getInstance(accessToken);
-//
-//            // Update status
-//            twitter4j.Status response = twitter
-//                    .updateStatus("测试🌃⚙👼🅰🏃‍⭕\n via 不浄な白い鳥");
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -183,21 +168,26 @@ public class LoginActivity extends Activity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
+            Log.e("Twitter", "LoginActivity > LoginTask > doInBackground");
+
             loginToTwitter();
             return true;
         }
 
         @Override
         protected void onPostExecute(Boolean result) {
+            Log.e("Twitter", "LoginActivity > LoginTask > onPostExecute");
             try {
                 myWebView.loadUrl(requestToken.getAuthenticationURL());
                 myWebView.setVisibility(View.VISIBLE);
                 myWebView.requestFocus(View.FOCUS_DOWN);
-            }catch (Exception e){
+            } catch (Exception e) {
                 // 获取不到 AuthenticationURL 时抛出异常的 Toast。
                 // 在中国大陆这种事情太正常了，不包会闪退
                 // 登陆不上不关本组的事
-                Toast.makeText(getApplicationContext(), R.string.get_auth_url_fail, Toast.LENGTH_LONG).show();
+                Log.e("Twitter", e.getMessage());
+                if (isTwitterLoggedInAlready())
+                    Toast.makeText(getApplicationContext(), R.string.get_auth_url_fail, Toast.LENGTH_LONG).show();
             }
         }
     }

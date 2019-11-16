@@ -1,9 +1,11 @@
 package com.nachtgeistw.impurebird.ui.home;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -11,31 +13,53 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.nachtgeistw.impurebird.BirdMainInterface;
 import com.nachtgeistw.impurebird.R;
+import com.nachtgeistw.impurebird.TweetAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import twitter4j.Paging;
+import twitter4j.Status;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
 
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
+    List<Status> tweetList = new ArrayList<>();
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                ViewModelProviders.of(this).get(HomeViewModel.class);
+        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         RecyclerView recyclerView = root.findViewById(R.id.home_timeline_recyclerview);
 
         //Twitter 用户。这个应该在Profile里的
         //https://www.cnblogs.com/zyanrong/p/5415626.html
+        Twitter twitter = BirdMainInterface.twitter;
+        //获取推特并展示
+        Log.e("Twitter", "onCreatView > getHomeTimeline");
+//            Toast.makeText(getApplicationContext(), "获取到首页推特了[表情]", Toast.LENGTH_LONG).show();
+        //获取完放进layout里
+        String user = null;
+//        try {
+            Log.e("Twitter", "BirdMainInterface > try > ");
+            ////这行有问题，执行到这里就会闪退
+//            user = twitter.verifyCredentials().getScreenName();
+            Log.e("Twitter", "BirdMainInterface > user > ");
+//            tweetList = twitter.getUserTimeline(user);
+//        } catch (TwitterException e) {
+//            e.printStackTrace();
+//            Log.e("Twitter", "BirdMainInterface > catch > ");
+////            Toast.makeText(getContext(), "妹有网络获取不到首页推特哦(⊙o⊙)？", Toast.LENGTH_LONG).show();
+//        }
 
-        //应该是Home Timeline
-        //https://www.reddit.com/r/iOSProgramming/comments/3ms2l1/anyone_using_twitterkit_is_there_a_way_to_embed_a/
-//        String userName = getActivity().getIntent().getStringExtra("user_name");
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-//        final UserTimeline userTimeline = new UserTimeline.Builder().screenName(userName).build();
-//        final TweetTimelineRecyclerViewAdapter adapter = new TweetTimelineRecyclerViewAdapter.Builder(getActivity())
-//                .setTimeline(userTimeline)
-//                .setViewStyle(R.style.tw__TweetLightWithActionsStyle)
-//                .build();
-//        recyclerView.setAdapter(adapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+        TweetAdapter adapter = new TweetAdapter(tweetList);
+        recyclerView.setAdapter(adapter);
         return root;
     }
 }

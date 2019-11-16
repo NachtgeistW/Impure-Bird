@@ -47,7 +47,6 @@ public class LoginActivity extends Activity {
 
     // Login button
     Button btnShareTwitter;
-
     WebView myWebView;
 
     // Twitter

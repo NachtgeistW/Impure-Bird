@@ -1,29 +1,29 @@
 package com.nachtgeistw.impurebird;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
-import com.google.android.material.navigation.NavigationView;
-
-import androidx.drawerlayout.widget.DrawerLayout;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -37,27 +37,16 @@ import static com.nachtgeistw.impurebird.LoginActivity.TWITTER_CONSUMER_SECRET;
 public class BirdMainInterface extends AppCompatActivity {
     static final String PREF_KEY_OAUTH_TOKEN = "access_token";
     static final String PREF_KEY_OAUTH_SECRET = "access_token_secret";
-    static final String PREF_KEY_TWITTER_LOGIN = "isTwitterLogedIn";
 
 
     private AppBarConfiguration mAppBarConfiguration;
-    //    Intent intent;
-//    String access_token, access_token_secret;
-//    ConfigurationBuilder builder = new ConfigurationBuilder();
-//    AccessToken accessToken;
-    Twitter twitter;
+    public static Twitter twitter;
+    List<Status> tweetList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         //Twitter initial
-//        intent = getIntent();
-//        access_token = intent.getStringExtra(PREF_KEY_OAUTH_TOKEN);
-//        access_token_secret = intent.getStringExtra(PREF_KEY_OAUTH_SECRET);
-//        builder.setOAuthConsumerKey(String.valueOf(R.string.consumer_key));
-//        builder.setOAuthConsumerSecret(String.valueOf(R.string.consumer_secret));
-//        accessToken = new AccessToken(access_token, access_token_secret);
-//        twitter = new TwitterFactory(builder.build()).getInstance(accessToken);
         SharedPreferences mSharedPreferences = LoginActivity.mSharedPreferences;
         ConfigurationBuilder builder = new ConfigurationBuilder();
         builder.setOAuthConsumerKey(TWITTER_CONSUMER_KEY);
@@ -88,6 +77,8 @@ public class BirdMainInterface extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+//            Toast.makeText(getApplicationContext(), "获取到首页推特了[表情]", Toast.LENGTH_LONG).show();
     }
 
     @Override

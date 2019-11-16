@@ -155,8 +155,6 @@ public class LoginActivity extends Activity {
             e.apply(); // save changes
 
             Intent intent = new Intent(LoginActivity.this, BirdMainInterface.class);
-//            intent.putExtra(PREF_KEY_OAUTH_TOKEN, accessToken.getToken());
-//            intent.putExtra(PREF_KEY_OAUTH_SECRET, accessToken.getTokenSecret());
             startActivity(intent);
         } catch (Exception e) {
             e.printStackTrace();

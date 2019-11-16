@@ -44,15 +44,17 @@ public class HomeFragment extends Fragment {
 //            Toast.makeText(getApplicationContext(), "获取到首页推特了[表情]", Toast.LENGTH_LONG).show();
         //获取完放进layout里
         String user = null;
-        try {
-            user = twitter.verifyCredentials().getScreenName();
-            Log.e("Twitter", "BirdMainInterface > getHomeTimeline > " + user);
-            tweetList = twitter.getUserTimeline(user);
-        } catch (TwitterException e) {
-            e.printStackTrace();
-            Log.e("Twitter", "BirdMainInterface > catch > " + e.getMessage());
-//            Toast.makeText(getContext(), "妹有网络获取不到首页推特哦(⊙o⊙)？", Toast.LENGTH_LONG).show();
-        }
+//        try {
+            Log.e("Twitter", "BirdMainInterface > try > ");
+            ////这行有问题，执行到这里就会闪退
+//            user = twitter.verifyCredentials().getScreenName();
+            Log.e("Twitter", "BirdMainInterface > user > ");
+//            tweetList = twitter.getUserTimeline(user);
+//        } catch (TwitterException e) {
+//            e.printStackTrace();
+//            Log.e("Twitter", "BirdMainInterface > catch > ");
+////            Toast.makeText(getContext(), "妹有网络获取不到首页推特哦(⊙o⊙)？", Toast.LENGTH_LONG).show();
+//        }
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);

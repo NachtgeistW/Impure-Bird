@@ -11,7 +11,7 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery" translatable="false">Gallery</string>
     <string name="menu_slideshow" translatable="false">Slideshow</string>
-    <string name="setting" translatable="false">Tools</string>
+    <string name="setting">Setting</string>
     <string name="menu_share" translatable="false">Share</string>
     <string name="menu_send" translatable="false">Send</string>
 
@@ -21,4 +21,7 @@
     <string name="get_auth_url_fail">Unable to connect to the Twitter server temporarily. Please check your network connection and try again.</string>
     <string name="tweet_succeed">Tweet sent.</string>
     <string name="tweet_fail">Tweet sent failed. Please check your network connection and try again later.</string>
+    <string name="send">send</string>
+    <string name="title_activity_send_tweet">Send Tweet</string>
+    <string name="edit_text_hint">What\'s happening?</string>
 </resources>

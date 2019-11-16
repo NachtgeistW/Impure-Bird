@@ -186,7 +186,7 @@ public class LoginActivity extends Activity {
                 // 在中国大陆这种事情太正常了，不包会闪退
                 // 登陆不上不关本组的事
                 Log.e("Twitter", e.getMessage());
-                if (isTwitterLoggedInAlready())
+                if (!isTwitterLoggedInAlready())
                     Toast.makeText(getApplicationContext(), R.string.get_auth_url_fail, Toast.LENGTH_LONG).show();
             }
         }

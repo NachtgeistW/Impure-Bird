@@ -82,8 +82,8 @@ public class BirdMainInterface extends AppCompatActivity {
                 R.id.nav_setting, R.id.nav_share, R.id.nav_send)
                 .setDrawerLayout(drawer)
                 .build();
-        // set Twitter Avatar
-        SetUserInfo();
+//        // set Twitter Avatar
+//        SetUserInfo();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);

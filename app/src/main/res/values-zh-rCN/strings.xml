@@ -11,4 +11,5 @@
     <string name="setting">设置</string>
     <string name="title_activity_send_tweet">发送推文</string>
     <string name="edit_text_hint">有什么新鲜事？</string>
+    <string name="pull_home_timeline_failed">获取不到首页推特哦(⊙o⊙)？</string>
 </resources>

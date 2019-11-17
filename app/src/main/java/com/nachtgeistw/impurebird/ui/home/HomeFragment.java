@@ -54,6 +54,7 @@ public class HomeFragment extends Fragment {
         TweetAdapter adapter = new TweetAdapter(tweetList);
         recyclerView.setAdapter(adapter);
         return root;
+
     }
 
     class PullUserTimeline extends AsyncTask<Void, Integer, Boolean> {

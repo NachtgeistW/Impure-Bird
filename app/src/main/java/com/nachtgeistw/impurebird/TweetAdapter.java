@@ -1,36 +1,34 @@
-package com.nachtgeistw.impurebird.util;
+package com.nachtgeistw.impurebird;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.nachtgeistw.impurebird.R;
-import com.nachtgeistw.impurebird.ui.home.Tweets;
-
-import java.util.List;
+import twitter4j.Status;
 
 public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> {
 
-    private List<Tweets> mTweetList;
+    private List<Status> mTweetList;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         //先定义里面要放的组件
         TextView username;
 
-        ViewHolder(View view) {
+        public ViewHolder(View view) {
             super(view);
             //关联组件
-            username = itemView.findViewById(R.id.user_name);
+            username = view.findViewById(R.id.user_name);
         }
     }
 
-    public TweetAdapter(List<Tweets> tweetlist) {
-
-        this.mTweetList = tweetlist;
+    public TweetAdapter(List<Status> tweetlist) {
+        mTweetList = tweetlist;
     }
 
     @NonNull
@@ -38,17 +36,19 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //这里获取
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.tweet_item, parent, false);
-        return new ViewHolder(view);
+        ViewHolder holder = new ViewHolder(view);
+        return holder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Tweets tweet = mTweetList.get(position);
-        holder.username.setText(tweet.getName());
+        Status tweet = mTweetList.get(position);
+        holder.username.setText(tweet.getUser().getName());
     }
 
     @Override
     public int getItemCount() {
         return mTweetList.size();
     }
+
 }

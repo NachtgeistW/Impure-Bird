@@ -24,5 +24,4 @@
     <string name="send">send</string>
     <string name="title_activity_send_tweet">Send Tweet</string>
     <string name="edit_text_hint">What\'s happening?</string>
-    <string name="pull_home_timeline_failed">Could not access tweet now. Please try again later.</string>
 </resources>

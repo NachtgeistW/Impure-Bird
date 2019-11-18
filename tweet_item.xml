@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+<View android:layout_height="1px" android:background="#000000" android:layout_width="fill_parent"></View>
+
+
+    //用户头像图片user_head
+    <ImageView
+        android:id="@+id/user_head"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/ic_person_black_24dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="10dp"/>
+
+    //用户名文字user_name
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/user_head"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="10dp"
+        android:textStyle="bold" />
+
+    //推文user_text
+    <TextView
+        android:id="@+id/user_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/user_name"
+        android:layout_toRightOf="@id/user_head"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="20dp" />
+</RelativeLayout>

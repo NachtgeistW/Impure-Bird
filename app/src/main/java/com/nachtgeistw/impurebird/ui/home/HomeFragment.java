@@ -14,55 +14,49 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.nachtgeistw.impurebird.BirdMainInterface;
 import com.nachtgeistw.impurebird.R;
-import com.nachtgeistw.impurebird.TweetAdapter;
+import com.nachtgeistw.impurebird.util.TweetAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import twitter4j.Paging;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import twitter4j.Status;
-import twitter4j.Twitter;
 import twitter4j.TwitterException;
 
 import static com.nachtgeistw.impurebird.BirdMainInterface.twitter;
+import static java.lang.Thread.sleep;
 
 public class HomeFragment extends Fragment {
 
-    private HomeViewModel homeViewModel;
-    List<Status> tweetList = new ArrayList<>();
-    String user = null;
-
+    private List<Status> statusList = new ArrayList<>();
+    private int showTweetNum = 20;
+    private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
-        RecyclerView recyclerView = root.findViewById(R.id.home_timeline_recyclerview);
-
-        //Twitter 用户。这个应该在Profile里的
-        //https://www.cnblogs.com/zyanrong/p/5415626.html
-
-        //获取推特并展示
-        Log.e("Twitter", "BirdMainInterface > PullUserTimeline");
-        new PullUserTimeline().execute();
-
-        //获取完放进layout里
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        //关联recycler组件
+        recyclerView = root.findViewById((R.id.home_timeline_recyclerview));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        TweetAdapter adapter = new TweetAdapter(tweetList);
-        recyclerView.setAdapter(adapter);
+        //关联刷新组件
+        swipeRefreshLayout = root.findViewById(R.id.swipe_refresh);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+        swipeRefreshLayout.setOnRefreshListener(() -> new PullHomeTimeline().execute());
+        //获取推特并展示
+        new PullHomeTimeline().execute();
         return root;
 
     }
 
-    class PullUserTimeline extends AsyncTask<Void, Integer, Boolean> {
-
+    class PullHomeTimeline extends AsyncTask<Void, Integer, Boolean> {
         @Override
         protected Boolean doInBackground(Void... voids) {
             try {
-                tweetList = twitter.getHomeTimeline();
+                statusList = twitter.getHomeTimeline();
                 return true;
             } catch (TwitterException e) {
                 e.printStackTrace();
@@ -72,10 +66,12 @@ public class HomeFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Boolean result) {
-            if (result) {
-                Toast.makeText(getContext(), "获取到首页推特了[表情]", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(getContext(), "妹有网络获取不到首页推特哦(⊙o⊙)？", Toast.LENGTH_LONG).show();
+            TweetAdapter adapter = new TweetAdapter(statusList);
+            recyclerView.setAdapter(adapter);
+            swipeRefreshLayout.setRefreshing(false);
+            if (!result) {
+                Toast.makeText(getContext(), String.valueOf(R.string.pull_home_timeline_failed),
+                        Toast.LENGTH_LONG).show();
             }
         }
     }

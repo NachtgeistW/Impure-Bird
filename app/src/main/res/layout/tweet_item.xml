@@ -1,21 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical" android:layout_width="match_parent"
-        android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-//单条推的组件有
-
-
-    //头像
-
-    //名字
-<TextView
-    android:id="@+id/user_name"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center_vertical"
-    android:layout_marginLeft="10dp"/>
+    <View
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:background="#000000" />
 
 
-    //内容
-</LinearLayout>
+    <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/user_head"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="3dp"
+            android:src="@drawable/ic_person_black_24dp" />
+
+    <TextView
+            android:id="@+id/user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@id/user_head"
+            android:textStyle="bold" />
+    //推文user_text
+
+    <TextView
+            android:id="@+id/user_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/user_head"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:layout_toRightOf="@id/user_head" />
+    <!--    android:layout_below="@id/user_text"-->
+<!--    <ImageView-->
+<!--            android:id="@+id/icon_favorited"-->
+<!--            android:layout_width="25dp"-->
+<!--            android:layout_height="25dp"-->
+<!--            android:layout_below="@id/user_text"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:layout_marginStart="37dp"-->
+<!--            android:layout_toEndOf="@id/user_head"-->
+<!--            android:src="@drawable/ic_favorite_red_800_24dp" />-->
+
+    <ImageView
+            android:id="@+id/icon_not_favorite"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_below="@id/user_text"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="0dp"
+            android:layout_toRightOf="@id/user_head"
+            android:src="@drawable/ic_not_favorite" />
+
+    <ImageView
+            android:id="@+id/icon_not_comment"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_below="@id/user_text"
+            android:layout_alignParentBottom="@id/user_text"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="50dp"
+            android:layout_toRightOf="@id/icon_not_favorite"
+            android:src="@drawable/ic_not_comment" />
+
+    <ImageView
+            android:id="@+id/icon_not_forward"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_below="@id/user_text"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="50dp"
+            android:layout_toRightOf="@id/icon_not_comment"
+            android:src="@drawable/ic_not_retweet" />
+</RelativeLayout>

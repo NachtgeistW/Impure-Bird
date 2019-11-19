@@ -94,7 +94,7 @@ public class LoginActivity extends Activity {
      * Function to login twitter
      */
     private void loginToTwitter() {
-        Log.e("Twitter", "LoginActivity > loginToTwitter");
+        Log.e("Twitter", "####LoginActivity > loginToTwitter");
         // Check if already logged in
         if (!isTwitterLoggedInAlready()) {
             ConfigurationBuilder builder = new ConfigurationBuilder();

@@ -23,7 +23,7 @@ import java.util.List;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 
-import static com.nachtgeistw.impurebird.BirdMainInterface.twitter;
+import static com.nachtgeistw.impurebird.BirdMainInterface.twitter_main;
 import static com.nachtgeistw.impurebird.util.util.getBitmapFromURL;
 
 public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> {
@@ -216,7 +216,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             if (status.isRetweetedByMe()) {
                 try {
                     Log.i("Twitter", "SetStatusFavorite > is retweeted");
-                    mTweetList.set(positions[0], twitter.unRetweetStatus(status.getId()));
+                    mTweetList.set(positions[0], twitter_main.unRetweetStatus(status.getId()));
                     return is_retweeted;
                 } catch (TwitterException e) {
                     e.printStackTrace();
@@ -227,7 +227,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             else
                 try {
                     Log.i("Twitter", "SetStatusFavorite > is not retweeted");
-                    mTweetList.set(positions[0], twitter.retweetStatus(status.getId()));
+                    mTweetList.set(positions[0], twitter_main.retweetStatus(status.getId()));
                     return is_not_favorited;
 
                 } catch (TwitterException e) {
@@ -273,7 +273,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             if (status.isFavorited()) {
                 try {
                     Log.i("Twitter", "SetStatusFavorite > is favorited");
-                    mTweetList.set(positions[0], twitter.destroyFavorite(status.getId()));
+                    mTweetList.set(positions[0], twitter_main.destroyFavorite(status.getId()));
                     return is_favorited;
                 } catch (TwitterException e) {
                     e.printStackTrace();
@@ -284,7 +284,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             else
                 try {
                     Log.i("Twitter", "SetStatusFavorite > is not favorited");
-                    mTweetList.set(positions[0], twitter.createFavorite(status.getId()));
+                    mTweetList.set(positions[0], twitter_main.createFavorite(status.getId()));
                     // 这里要返回的结果其实是status.isFavorited()的，
                     // 为了在后面 onPostExecute 时判断有没有点过赞，进一步修改点赞状态
                     return is_not_favorited;

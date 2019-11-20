@@ -1,10 +1,7 @@
 package com.nachtgeistw.impurebird.ui.home;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +9,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,10 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.nachtgeistw.impurebird.R;
 import com.nachtgeistw.impurebird.util.TweetAdapter;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,8 +25,7 @@ import twitter4j.Paging;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 
-import static com.nachtgeistw.impurebird.BirdMainInterface.twitter;
-import static com.nachtgeistw.impurebird.util.util.getBitmapFromURL;
+import static com.nachtgeistw.impurebird.BirdMainInterface.twitter_main;
 import static java.lang.Thread.sleep;
 
 public class HomeFragment extends Fragment {
@@ -67,7 +58,7 @@ public class HomeFragment extends Fragment {
         @Override
         protected Boolean doInBackground(Void... voids) {
             try {
-                statusList = twitter.getHomeTimeline(new Paging(1, 200));
+                statusList = twitter_main.getHomeTimeline(new Paging(1, 200));
                 return true;
             } catch (TwitterException e) {
                 e.printStackTrace();

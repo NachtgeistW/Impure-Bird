@@ -8,7 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
+
+import twitter4j.Status;
 
 public class util {
     public static String tweet_content = "tweet_content";
@@ -31,7 +32,5 @@ public class util {
         }
 
     }
-     public static twitter4j.Status getUpdatedStatus(twitter4j.Status status) {
-        return status;
-    }
+
 }

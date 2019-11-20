@@ -15,17 +15,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import twitter4j.Status;
-import twitter4j.TwitterException;
-
 import com.nachtgeistw.impurebird.DetailPageActivity;
 import com.nachtgeistw.impurebird.R;
 
 import java.util.List;
 
+import twitter4j.Status;
+import twitter4j.TwitterException;
+
 import static com.nachtgeistw.impurebird.BirdMainInterface.twitter;
 import static com.nachtgeistw.impurebird.util.util.getBitmapFromURL;
-import static com.nachtgeistw.impurebird.util.util.getUpdatedStatus;
 
 public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> {
 
@@ -49,7 +48,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             favorite = itemView.findViewById(R.id.icon_not_favorite);
             comment = itemView.findViewById(R.id.icon_not_comment);
             retweet = itemView.findViewById(R.id.icon_not_retweet);
-
         }
     }
 
@@ -89,14 +87,14 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         holder.retweet.setOnClickListener(v -> {
             int position = holder.getAdapterPosition();
             Status status = mTweetList.get(position);
-            new SetStatusRetweet(holder.retweet, status).execute();
+            new SetStatusRetweet(holder.retweet, status).execute(position);
         });
 
         // 点赞的click listener
         holder.favorite.setOnClickListener(v -> {
             int position = holder.getAdapterPosition();
             Status status = mTweetList.get(position);
-            new SetStatusFavorite(holder.favorite, status).execute();
+            new SetStatusFavorite(holder.favorite, status).execute(position);
         });
         return holder;
     }
@@ -149,7 +147,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         }
     }
 
-    //设置赞的初始状态
+    // 设置赞的初始状态
     class InitStatusFavorite extends AsyncTask<twitter4j.Status, Void, Boolean> {
         ImageView favorite;
         twitter4j.Status status;
@@ -175,10 +173,9 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         }
     }
 
-    //设置转发的初始状态
+    // 设置转发的初始状态
     class InitStatusRetweet extends AsyncTask<twitter4j.Status, Void, Boolean> {
         ImageView retweet;
-        twitter4j.Status status;
 
         InitStatusRetweet(ImageView imageView) {
             this.retweet = imageView;
@@ -186,9 +183,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
         @Override
         protected Boolean doInBackground(twitter4j.Status... statuses) {
-            status = statuses[0];
             // 没点过赞
-            return status.isRetweetedByMe();
+            return statuses[0].isRetweetedByMe();
         }
 
         @Override
@@ -201,11 +197,12 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         }
     }
 
-
-    class SetStatusRetweet extends AsyncTask<Void, Void, Integer> {
+    // 转发推文
+    // 只有下拉刷新一遍才能转发，没有办法的事情
+    class SetStatusRetweet extends AsyncTask<Integer, Void, Integer> {
         ImageView retweet;
         twitter4j.Status status;
-        final int is_retweeted = 1, is_not_retweeted = 0, error = -1;
+        final int is_retweeted = 1, is_not_favorited = 0, error = -1;
 
         SetStatusRetweet(ImageView imageView, twitter4j.Status status) {
             this.retweet = imageView;
@@ -213,31 +210,32 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         }
 
         @Override
-        protected Integer doInBackground(Void... voids) {
-            Log.i("Twitter", "SetStatusRetweet > doInBackground");
-            // 自己没转发
+        protected Integer doInBackground(Integer... positions) {
+            Log.i("Twitter", "SetStatusFavorite > doInBackground");
+            // 点过了
             if (status.isRetweetedByMe()) {
                 try {
-                    Log.i("Twitter", "SetStatusRetweet > is retweeted");
-                    status = twitter.unRetweetStatus(status.getId());
+                    Log.i("Twitter", "SetStatusFavorite > is retweeted");
+                    mTweetList.set(positions[0], twitter.unRetweetStatus(status.getId()));
                     return is_retweeted;
                 } catch (TwitterException e) {
                     e.printStackTrace();
                     return error;
                 }
             }
-            // 转过了
+            // 没点过赞
             else
                 try {
-                    Log.i("Twitter", "SetStatusRetweet > is not retweet");
-                    status = twitter.retweetStatus(status.getId());
-                    // 同点赞
-                    return is_not_retweeted;
+                    Log.i("Twitter", "SetStatusFavorite > is not retweeted");
+                    mTweetList.set(positions[0], twitter.retweetStatus(status.getId()));
+                    return is_not_favorited;
+
                 } catch (TwitterException e) {
                     e.printStackTrace();
                     return error;
                 }
         }
+
 
         @Override
         protected void onPostExecute(Integer result) {
@@ -247,18 +245,18 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                     Log.i("Twitter", "SetStatusRetweet > retweet canceled");
                     break;
                 }
-                case is_not_retweeted: {
+                case is_not_favorited: {
                     retweet.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_repeat));
                     Log.i("Twitter", "SetStatusRetweet > retweeted");
+                    break;
                 }
                 default:
             }
         }
     }
 
-
-    //设置赞的状态
-    class SetStatusFavorite extends AsyncTask<Void, Void, Integer> {
+    // 点赞
+    class SetStatusFavorite extends AsyncTask<Integer, Void, Integer> {
         ImageView favorite;
         twitter4j.Status status;
         final int is_favorited = 1, is_not_favorited = 0, error = -1;
@@ -269,13 +267,13 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         }
 
         @Override
-        protected Integer doInBackground(Void... voids) {
+        protected Integer doInBackground(Integer... positions) {
             Log.i("Twitter", "SetStatusFavorite > doInBackground");
             // 没点过赞
             if (status.isFavorited()) {
                 try {
                     Log.i("Twitter", "SetStatusFavorite > is favorited");
-                    status = twitter.destroyFavorite(status.getId());
+                    mTweetList.set(positions[0], twitter.destroyFavorite(status.getId()));
                     return is_favorited;
                 } catch (TwitterException e) {
                     e.printStackTrace();
@@ -285,8 +283,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             // 点过了
             else
                 try {
-                    Log.i("Twitter", "SetStatusFavorite > is not favorite");
-                    status = twitter.createFavorite(status.getId());
+                    Log.i("Twitter", "SetStatusFavorite > is not favorited");
+                    mTweetList.set(positions[0], twitter.createFavorite(status.getId()));
                     // 这里要返回的结果其实是status.isFavorited()的，
                     // 为了在后面 onPostExecute 时判断有没有点过赞，进一步修改点赞状态
                     return is_not_favorited;

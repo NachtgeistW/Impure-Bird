@@ -41,15 +41,6 @@
             android:layout_marginStart="10dp"
             android:layout_toRightOf="@id/user_head" />
     <!--    android:layout_below="@id/user_text"-->
-<!--    <ImageView-->
-<!--            android:id="@+id/icon_favorited"-->
-<!--            android:layout_width="25dp"-->
-<!--            android:layout_height="25dp"-->
-<!--            android:layout_below="@id/user_text"-->
-<!--            android:layout_gravity="center_vertical"-->
-<!--            android:layout_marginStart="37dp"-->
-<!--            android:layout_toEndOf="@id/user_head"-->
-<!--            android:src="@drawable/ic_favorite_red_800_24dp" />-->
 
     <ImageView
             android:id="@+id/icon_not_favorite"
@@ -75,12 +66,12 @@
             android:src="@drawable/ic_not_comment" />
 
     <ImageView
-            android:id="@+id/icon_not_forward"
+            android:id="@+id/icon_not_retweet"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_below="@id/user_text"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="50dp"
             android:layout_toRightOf="@id/icon_not_comment"
-            android:src="@drawable/ic_not_retweet" />
+            android:src="@drawable/ic_not_repeat" />
 </RelativeLayout>

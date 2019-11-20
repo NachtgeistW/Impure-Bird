@@ -1,35 +1,87 @@
 package com.nachtgeistw.impurebird.ui.gallery;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import twitter4j.Status;
+import twitter4j.TwitterException;
 
 import com.nachtgeistw.impurebird.R;
+import com.nachtgeistw.impurebird.util.TweetAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.nachtgeistw.impurebird.BirdMainInterface.twitter;
 
 public class GalleryFragment extends Fragment {
 
-    private GalleryViewModel galleryViewModel;
+    private List<Status> statusList = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        galleryViewModel =
-                ViewModelProviders.of(this).get(GalleryViewModel.class);
         View root = inflater.inflate(R.layout.fragment_gallery, container, false);
-        final TextView textView = root.findViewById(R.id.text_gallery);
-        galleryViewModel.getText().observe(this, new Observer<String>() {
+
+        //关联recycler组件
+        recyclerView = root.findViewById((R.id.home_timeline_recyclerview));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                layoutManager.getOrientation());
+        recyclerView.addItemDecoration(mDividerItemDecoration);
+        recyclerView.setLayoutManager(layoutManager);
+        //关联刷新组件
+        swipeRefreshLayout = root.findViewById(R.id.swipe_refresh);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.
+                OnRefreshListener() {
             @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
+            public void onRefresh() {
+                new PullUserTimeline().execute();
             }
         });
+        //获取推特并展示
+        new PullUserTimeline().execute();
+
         return root;
+    }
+
+    class PullUserTimeline extends AsyncTask<Void, Integer, Boolean> {
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            try {
+                statusList = twitter.getUserTimeline();
+                return true;
+            } catch (TwitterException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            TweetAdapter adapter = new TweetAdapter(getContext(),statusList);
+            recyclerView.setAdapter(adapter);
+            swipeRefreshLayout.setRefreshing(false);
+            if (!result) {
+                Toast.makeText(getContext(), String.valueOf(R.string.pull_home_timeline_failed),
+                        Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

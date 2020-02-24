@@ -62,61 +62,65 @@ public class LoginActivity extends Activity {
 
         util.ActivityCollector.addActivity(this);
 
-        // All UI elements
-        btnShareTwitter = findViewById(R.id.btnShareTwitter);
-        myWebView = findViewById(R.id.loginWebView);
-        myWebView.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView webView, String url) {
-                if (url != null && url.startsWith(TWITTER_CALLBACK_URL))
-                    new AfterLoginTask().execute(url);
-                else {
-                    myWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-                    webView.loadUrl(url);
-                }
-                return true;
-            }
-        });
-
         // Shared Preferences
         mSharedPreferences = getApplicationContext().getSharedPreferences(
                 "MyPref", 0);
+        if (!isTwitterLoggedInAlready()) {
+            Log.i("Twitter", "LoginActivity > onCreate > isNotLoginIn");
 
-        /**
-         * Twitter login button click event will call loginToTwitter() function
-         * */
-        btnShareTwitter.setOnClickListener(arg0 -> {
-            Log.e("Twitter", "LoginActivity > onCreate > setOnClickListener");
-            // Call login twitter function
-            new LoginTask().execute();
-        });
+            // All UI elements
+            btnShareTwitter = findViewById(R.id.btnShareTwitter);
+            myWebView = findViewById(R.id.loginWebView);
+            myWebView.setWebViewClient(new WebViewClient() {
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView webView, String url) {
+                    if (url != null && url.startsWith(TWITTER_CALLBACK_URL))
+                        new AfterLoginTask().execute(url);
+                    else {
+                        myWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+                        webView.loadUrl(url);
+                    }
+                    return true;
+                }
+            });
+
+
+            /**
+             * Twitter login button click event will call loginToTwitter() function
+             * */
+            btnShareTwitter.setOnClickListener(arg0 -> {
+                // Call login twitter function
+                new LoginTask().execute();
+            });
+        } else {
+            Log.i("Twitter", "LoginActivity > onCreate > isLoginIn");
+            Intent intent = new Intent(LoginActivity.this, BirdMainInterface.class);
+            startActivity(intent);
+        }
     }
 
     /**
      * Function to login twitter
      */
     private void loginToTwitter() {
-        Log.e("Twitter", "####LoginActivity > loginToTwitter");
+        Log.i("Twitter", "LoginActivity > loginToTwitter");
         // Check if already logged in
-        if (!isTwitterLoggedInAlready()) {
-            ConfigurationBuilder builder = new ConfigurationBuilder();
-            builder.setOAuthConsumerKey(TWITTER_CONSUMER_KEY);
-            builder.setOAuthConsumerSecret(TWITTER_CONSUMER_SECRET);
-            Configuration configuration = builder.build();
 
-            TwitterFactory factory = new TwitterFactory(configuration);
-            twitter = factory.getInstance();
+        ConfigurationBuilder builder = new ConfigurationBuilder();
+        builder.setOAuthConsumerKey(TWITTER_CONSUMER_KEY);
+        builder.setOAuthConsumerSecret(TWITTER_CONSUMER_SECRET);
+        Configuration configuration = builder.build();
 
-            try {
-                requestToken = twitter.getOAuthRequestToken(TWITTER_CALLBACK_URL);
-            } catch (TwitterException e) {
-                e.printStackTrace();
-            }
+        TwitterFactory factory = new TwitterFactory(configuration);
+        twitter = factory.getInstance();
 
-        } else {
-            Intent intent = new Intent(LoginActivity.this, BirdMainInterface.class);
-            startActivity(intent);
+        try {
+            requestToken = twitter.getOAuthRequestToken(TWITTER_CALLBACK_URL);
+        } catch (TwitterException e) {
+            e.printStackTrace();
         }
+
+
     }
 
     /**
@@ -129,7 +133,7 @@ public class LoginActivity extends Activity {
     }
 
     public void handleTwitterCallback(String url) {
-        Log.e("Twitter", "LoginActivity > handleTwitterCallback");
+        Log.i("Twitter", "LoginActivity > handleTwitterCallback");
         Uri uri = Uri.parse(url);
 
         // oAuth verifier
@@ -163,7 +167,7 @@ public class LoginActivity extends Activity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            Log.e("Twitter", "LoginActivity > LoginTask > doInBackground");
+            Log.i("Twitter", "LoginActivity > LoginTask > doInBackground");
 
             loginToTwitter();
             return true;
@@ -171,7 +175,7 @@ public class LoginActivity extends Activity {
 
         @Override
         protected void onPostExecute(Boolean result) {
-            Log.e("Twitter", "LoginActivity > LoginTask > onPostExecute");
+            Log.i("Twitter", "LoginActivity > LoginTask > onPostExecute");
             try {
                 myWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
                 myWebView.loadUrl(requestToken.getAuthenticationURL());
@@ -182,7 +186,7 @@ public class LoginActivity extends Activity {
                 // 获取不到 AuthenticationURL 时抛出异常的 Toast。
                 // 在中国大陆这种事情太正常了，不包会闪退
                 // 登陆不上不关本组的事
-                Log.e("Twitter", e.getMessage());
+                Log.i("Twitter", e.getMessage());
                 if (!isTwitterLoggedInAlready())
                     Toast.makeText(getApplicationContext(), R.string.get_auth_url_fail, Toast.LENGTH_LONG).show();
                 btnShareTwitter.setVisibility(View.VISIBLE);

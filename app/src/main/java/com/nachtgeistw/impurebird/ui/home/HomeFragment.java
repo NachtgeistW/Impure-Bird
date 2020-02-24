@@ -58,7 +58,7 @@ public class HomeFragment extends Fragment {
         @Override
         protected Boolean doInBackground(Void... voids) {
             try {
-                statusList = twitter_main.getHomeTimeline(new Paging(1, 200));
+                statusList = twitter_main.getHomeTimeline(new Paging(1, 80));
                 return true;
             } catch (TwitterException e) {
                 e.printStackTrace();

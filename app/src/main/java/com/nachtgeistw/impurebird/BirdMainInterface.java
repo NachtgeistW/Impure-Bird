@@ -2,11 +2,13 @@ package com.nachtgeistw.impurebird;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,6 +33,7 @@ import static com.nachtgeistw.impurebird.LoginActivity.PREF_KEY_TWITTER_LOGIN;
 import static com.nachtgeistw.impurebird.LoginActivity.TWITTER_CONSUMER_KEY;
 import static com.nachtgeistw.impurebird.LoginActivity.TWITTER_CONSUMER_SECRET;
 import static com.nachtgeistw.impurebird.util.util.ActivityCollector;
+import static com.nachtgeistw.impurebird.util.util.getBitmapFromURL;
 import static com.nachtgeistw.impurebird.util.util.tweet_content;
 
 
@@ -63,6 +66,7 @@ public class BirdMainInterface extends AppCompatActivity {
 
         //UI initial
         Toolbar toolbar = findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener((View v) -> {
@@ -74,8 +78,7 @@ public class BirdMainInterface extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
-                R.id.nav_setting, R.id.nav_share, R.id.nav_send)
+                R.id.nav_home, R.id.nav_gallery)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -117,14 +120,12 @@ public class BirdMainInterface extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.bird_main_interface, menu);
         return true;
     }
-
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
-
     //发推的AsyncTask
     class SendTweet extends AsyncTask<Void, Integer, Boolean> {
         String tweet_context;
@@ -132,7 +133,6 @@ public class BirdMainInterface extends AppCompatActivity {
         SendTweet(String return_tweet_content) {
             tweet_context = return_tweet_content;
         }
-
         @Override
         protected Boolean doInBackground(Void... voids) {
             try {
@@ -144,7 +144,6 @@ public class BirdMainInterface extends AppCompatActivity {
                 return false;
             }
         }
-
         @Override
         protected void onPostExecute(Boolean result) {
             // 如何传值到result上：https://www.jianshu.com/p/817a34a5f200
@@ -157,17 +156,22 @@ public class BirdMainInterface extends AppCompatActivity {
             }
         }
     }
-
     void SetUserInfo() {
         Log.e("Twitter", "BirdMain > SetUserInfo");
 
         Long user;
         try {
             user = twitter_main.getId();
+//            String head_url = twitter_main.verifyCredentials().get400x400ProfileImageURLHttps();
+//            ImageView userhead = findViewById(R.id.imageView);
+//            DownLoadHead image = new DownLoadHead(userhead);
+//            image.execute(head_url);
         } catch (Exception e) {
             e.printStackTrace();
         }
 //        TextView text = (TextView)findViewById(R.id.user_name);
 //        text.setText(twitter_main.verifyCredentials().getScreenName());
     }
+
+
 }

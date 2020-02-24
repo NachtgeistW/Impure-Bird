@@ -53,7 +53,6 @@ public class GalleryFragment extends Fragment {
         });
         //获取推特并展示
         new PullUserTimeline().execute();
-
         return root;
     }
 

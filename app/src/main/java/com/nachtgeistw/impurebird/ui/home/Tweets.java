@@ -1,5 +1,6 @@
 package com.nachtgeistw.impurebird.ui.home;
 
+
 import android.graphics.Bitmap;
 
 public class Tweets {
@@ -15,5 +16,6 @@ public class Tweets {
     public Bitmap getUser_head(){return user_head;}
     public  String getName() {
         return user_name;
+
     }
 }

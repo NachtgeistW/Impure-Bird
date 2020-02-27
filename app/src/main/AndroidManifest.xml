@@ -1,41 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.nachtgeistw.impurebird">
+        xmlns:tools="http://schemas.android.com/tools"
+        package="com.nachtgeistw.impurebird"
+        tools:ignore="ExtraText">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_cat_butt"
-        android:label="Little Pussy"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".DetailPageActivity"></activity>
+            android:allowBackup="true"
+            android:icon="@mipmap/ic_cat_butt"
+            android:label="Little Pussy"
+            android:supportsRtl="true"
+            android:theme="@style/AppTheme">
+
+        <!--use configChanges to prevent activity restart when orientation changes-->
         <activity
-            android:name=".SendTweetActivity"
-            android:label="@string/title_activity_send_tweet">
+                android:name=".BirdMainInterface"
+                android:configChanges="orientation|screenSize"
+                android:label="@string/title_activity_bird_main_interface"
+                android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".BirdMainInterface"
-            android:label="@string/title_activity_bird_main_interface"
-            android:theme="@style/AppTheme.NoActionBar">
+                android:name=".DetailPageActivity"
+                android:configChanges="orientation|screenSize" />
+
+        <activity
+                android:name=".SendTweetActivity"
+                android:configChanges="orientation|screenSize"
+                android:label="@string/title_activity_send_tweet">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity">
+
+        <activity
+                android:name=".LoginActivity"
+                android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PicActivity"></activity>
-        <activity android:name=".UserHomeActivity"></activity>
+
+        <activity
+                android:name=".PicActivity"
+                android:configChanges="orientation|screenSize" />
+
+        <activity
+                android:name=".UserHomeActivity"
+                android:configChanges="orientation|screenSize" />
     </application>
 
 </manifest>

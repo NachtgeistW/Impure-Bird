@@ -11,7 +11,7 @@
 
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/user_head"
+        android:id="@+id/user_avatar"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentLeft="true"
@@ -28,7 +28,7 @@
         android:layout_gravity="center_vertical"
         android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
-        android:layout_toEndOf="@id/user_head"
+        android:layout_toEndOf="@id/user_avatar"
         android:textStyle="bold"/>
     //推文user_text
 
@@ -36,10 +36,10 @@
             android:id="@+id/user_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/user_head"
+            android:layout_below="@id/user_avatar"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="10dp"
-            android:layout_toRightOf="@id/user_head" />
+            android:layout_toRightOf="@id/user_avatar" />
     <!--    android:layout_below="@id/user_text"-->
     <LinearLayout
         android:orientation="horizontal"
@@ -51,7 +51,7 @@
         android:layout_marginTop="9dp"
         android:layout_marginBottom="0dp"
         android:layout_below="@id/user_text"
-        android:layout_toRightOf="@id/user_head">
+        android:layout_toRightOf="@id/user_avatar">
 
         <ImageView
             android:id="@+id/user_image1"
@@ -92,7 +92,7 @@
         android:layout_marginTop="100dip"
         android:layout_marginBottom="8dip"
         android:layout_below="@id/user_text"
-        android:layout_toRightOf="@id/user_head"
+        android:layout_toRightOf="@id/user_avatar"
         android:src="@drawable/ic_not_favorite"  />
 
     <ImageView

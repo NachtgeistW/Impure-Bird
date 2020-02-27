@@ -8,17 +8,18 @@
                 android:id="@+id/nav_home"
                 android:icon="@drawable/ic_home_black_24dp"
                 android:title="@string/menu_home" />
-
-
-
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="@string/communicate">
         <menu>
+            <item
+                    android:id="@+id/setting"
+                    android:icon="@drawable/ic_settings_black_24dp"
+                    android:title="@string/setting" />
             <item
                     android:id="@+id/nav_log_out"
                     android:icon="@drawable/ic_exit_to_app"
-                    android:title="@string/log_out" />
+                    android:title="@string/exit" />
         </menu>
     </item>
 

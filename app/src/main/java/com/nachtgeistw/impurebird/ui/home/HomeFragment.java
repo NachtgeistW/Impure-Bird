@@ -21,16 +21,20 @@ import java.util.List;
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+
 import twitter4j.Paging;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 
 import static com.nachtgeistw.impurebird.BirdMainInterface.twitter_main;
+
 import static java.lang.Thread.sleep;
 
 public class HomeFragment extends Fragment {
 
     private List<Status> statusList = new ArrayList<>();
+do_something_on_LoginActivity
+
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -40,9 +44,11 @@ public class HomeFragment extends Fragment {
         //关联recycler组件
         recyclerView = root.findViewById((R.id.home_timeline_recyclerview));
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+ do_something_on_LoginActivity
         DividerItemDecoration  mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
                 layoutManager.getOrientation());
         recyclerView.addItemDecoration(mDividerItemDecoration);
+
         recyclerView.setLayoutManager(layoutManager);
         //关联刷新组件
         swipeRefreshLayout = root.findViewById(R.id.swipe_refresh);
@@ -58,7 +64,9 @@ public class HomeFragment extends Fragment {
         @Override
         protected Boolean doInBackground(Void... voids) {
             try {
+do_something_on_LoginActivity
                 statusList = twitter_main.getHomeTimeline(new Paging(1, 80));
+
                 return true;
             } catch (TwitterException e) {
                 e.printStackTrace();
@@ -68,7 +76,9 @@ public class HomeFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Boolean result) {
+ do_something_on_LoginActivity
             TweetAdapter adapter = new TweetAdapter(getContext(),statusList);
+
             recyclerView.setAdapter(adapter);
             swipeRefreshLayout.setRefreshing(false);
             if (!result) {

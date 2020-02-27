@@ -11,7 +11,7 @@
     <string name="setting">设置</string>
     <string name="title_activity_send_tweet">发送推文</string>
     <string name="edit_text_hint">有什么新鲜事？</string>
-    <string name="pull_home_timeline_failed">获取不到首页推特哦(⊙o⊙)？</string>
+    <string name="pull_home_timeline_failed">暂时无法获取推文。请稍后重试。</string>
     <string name="communicate">Communicate</string>
-    <string name="exit" translatable="false">退出</string>
+    <string name="exit">退出</string>
 </resources>

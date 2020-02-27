@@ -51,7 +51,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             tweetView = view;
             //关联组件
             username = itemView.findViewById(R.id.user_name);
-            userhead = itemView.findViewById(R.id.user_head);
+            userhead = itemView.findViewById(R.id.user_avatar);
             usertext = itemView.findViewById(R.id.user_text);
             favorite = itemView.findViewById(R.id.icon_not_favorite);
             comment = itemView.findViewById(R.id.icon_not_comment);

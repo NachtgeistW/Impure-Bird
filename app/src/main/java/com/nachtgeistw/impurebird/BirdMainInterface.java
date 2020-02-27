@@ -2,16 +2,13 @@ package com.nachtgeistw.impurebird;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
@@ -21,6 +18,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.nachtgeistw.impurebird.util.BaseAppCompatActivity;
 import com.nachtgeistw.impurebird.util.util;
 
 import twitter4j.Twitter;
@@ -33,11 +31,10 @@ import static com.nachtgeistw.impurebird.LoginActivity.PREF_KEY_TWITTER_LOGIN;
 import static com.nachtgeistw.impurebird.LoginActivity.TWITTER_CONSUMER_KEY;
 import static com.nachtgeistw.impurebird.LoginActivity.TWITTER_CONSUMER_SECRET;
 import static com.nachtgeistw.impurebird.util.util.ActivityCollector;
-import static com.nachtgeistw.impurebird.util.util.getBitmapFromURL;
 import static com.nachtgeistw.impurebird.util.util.tweet_content;
 
 
-public class BirdMainInterface extends AppCompatActivity {
+public class BirdMainInterface extends BaseAppCompatActivity {
     static final String PREF_KEY_OAUTH_TOKEN = "access_token";
     static final String PREF_KEY_OAUTH_SECRET = "access_token_secret";
     static final int send_tweet = 1;
@@ -126,6 +123,7 @@ public class BirdMainInterface extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
     //发推的AsyncTask
     class SendTweet extends AsyncTask<Void, Integer, Boolean> {
         String tweet_context;
@@ -156,10 +154,11 @@ public class BirdMainInterface extends AppCompatActivity {
             }
         }
     }
+
     void SetUserInfo() {
         Log.e("Twitter", "BirdMain > SetUserInfo");
 
-        Long user;
+        long user;
         try {
             user = twitter_main.getId();
 //            String head_url = twitter_main.verifyCredentials().get400x400ProfileImageURLHttps();
@@ -172,6 +171,4 @@ public class BirdMainInterface extends AppCompatActivity {
 //        TextView text = (TextView)findViewById(R.id.user_name);
 //        text.setText(twitter_main.verifyCredentials().getScreenName());
     }
-
-
 }

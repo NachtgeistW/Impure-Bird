@@ -47,9 +47,7 @@
             </intent-filter>
         </activity>
 
-        <activity
-                android:name=".PicActivity"
-                android:configChanges="orientation|screenSize" />
+        <activity android:name=".PicActivity" />
 
         <activity
                 android:name=".UserHomeActivity"

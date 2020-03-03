@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
@@ -31,7 +32,10 @@ import static com.nachtgeistw.impurebird.LoginActivity.PREF_KEY_TWITTER_LOGIN;
 import static com.nachtgeistw.impurebird.LoginActivity.TWITTER_CONSUMER_KEY;
 import static com.nachtgeistw.impurebird.LoginActivity.TWITTER_CONSUMER_SECRET;
 import static com.nachtgeistw.impurebird.util.util.ActivityCollector;
+import static com.nachtgeistw.impurebird.util.util.USER_NICKNAME;
+import static com.nachtgeistw.impurebird.util.util.USER_NAME;
 import static com.nachtgeistw.impurebird.util.util.tweet_content;
+import static com.nachtgeistw.impurebird.util.util.utilSharedPreferences;
 
 
 public class BirdMainInterface extends BaseAppCompatActivity {
@@ -45,7 +49,8 @@ public class BirdMainInterface extends BaseAppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_bird_main_interface);
         util.ActivityCollector.addActivity(this);
 
         //Twitter initial
@@ -58,9 +63,6 @@ public class BirdMainInterface extends BaseAppCompatActivity {
         AccessToken accessToken = new AccessToken(access_token, access_token_secret);
         twitter_main = new TwitterFactory(builder.build()).getInstance(accessToken);
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bird_main_interface);
-
         //UI initial
         Toolbar toolbar = findViewById(R.id.toolbar);
 
@@ -70,8 +72,23 @@ public class BirdMainInterface extends BaseAppCompatActivity {
             intent = new Intent(BirdMainInterface.this, SendTweetActivity.class);
             startActivityForResult(intent, send_tweet);
         });
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        TextView userNickname = headerView.findViewById(R.id.nav_header_user_nickname);
+        TextView userName = headerView.findViewById(R.id.nav_header_user_name);
+        utilSharedPreferences = getApplicationContext().getSharedPreferences("MyPref", 0);
+        if (utilSharedPreferences.contains(USER_NAME)) {
+            userName.setText(utilSharedPreferences.getString(USER_NICKNAME, "1"));
+            userNickname.setText(utilSharedPreferences.getString(USER_NAME, "2"));
+        } else {
+            SetUserInfo(utilSharedPreferences);
+            userName.setText(utilSharedPreferences.getString(USER_NICKNAME, "3"));
+            userNickname.setText(utilSharedPreferences.getString(USER_NAME, "4"));
+
+        }
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -96,6 +113,28 @@ public class BirdMainInterface extends BaseAppCompatActivity {
             ActivityCollector.finishAll();
             return true;
         });
+
+    }
+
+    static void SetUserInfo(SharedPreferences s) {
+
+        final String[] userNickname = new String[1];
+        final String[] userName = new String[1];
+
+        new Thread(() -> {
+            try {
+                userName[0] = twitter_main.verifyCredentials().getName();
+                userNickname[0] = twitter_main.verifyCredentials().getScreenName();
+                Log.i("Twitter", "BirdMain > " + twitter_main.verifyCredentials().getScreenName());
+                Log.i("Twitter", "BirdMain > " + twitter_main.verifyCredentials().getName());
+            } catch (TwitterException e) {
+                e.printStackTrace();
+            }
+            SharedPreferences.Editor e = s.edit();
+            e.putString(USER_NAME, userName[0]);
+            e.putString(USER_NICKNAME, userNickname[0]);
+            e.apply();
+        }).start();
     }
 
     //对通过intent返回的数据做处理（这里只有一个send_tweet）
@@ -117,6 +156,7 @@ public class BirdMainInterface extends BaseAppCompatActivity {
         getMenuInflater().inflate(R.menu.bird_main_interface, menu);
         return true;
     }
+
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -131,6 +171,7 @@ public class BirdMainInterface extends BaseAppCompatActivity {
         SendTweet(String return_tweet_content) {
             tweet_context = return_tweet_content;
         }
+
         @Override
         protected Boolean doInBackground(Void... voids) {
             try {
@@ -142,33 +183,17 @@ public class BirdMainInterface extends BaseAppCompatActivity {
                 return false;
             }
         }
+
         @Override
         protected void onPostExecute(Boolean result) {
             // 如何传值到result上：https://www.jianshu.com/p/817a34a5f200
             // 当doInBackground(Params...)执行完毕并通过return语句进行返回时，这个方法就很快会被调用。返回的数据会作为参数传递到此方法中，
             // **可以利用返回的数据来进行一些UI操作，在主线程中进行，比如说提醒任务执行的结果。**
             if (result) {
-                Toast.makeText(getApplicationContext(), R.string.tweet_succeed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(BirdMainInterface.this, R.string.tweet_succeed, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getApplicationContext(), R.string.tweet_fail, Toast.LENGTH_LONG).show();
             }
         }
-    }
-
-    void SetUserInfo() {
-        Log.e("Twitter", "BirdMain > SetUserInfo");
-
-        long user;
-        try {
-            user = twitter_main.getId();
-//            String head_url = twitter_main.verifyCredentials().get400x400ProfileImageURLHttps();
-//            ImageView userhead = findViewById(R.id.imageView);
-//            DownLoadHead image = new DownLoadHead(userhead);
-//            image.execute(head_url);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-//        TextView text = (TextView)findViewById(R.id.user_name);
-//        text.setText(twitter_main.verifyCredentials().getScreenName());
     }
 }

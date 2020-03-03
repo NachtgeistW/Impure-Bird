@@ -1,4 +1,4 @@
-package com.nachtgeistw.impurebird.ui.send;
+package com.nachtgeistw.impurebird.BirdMainUI.send;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

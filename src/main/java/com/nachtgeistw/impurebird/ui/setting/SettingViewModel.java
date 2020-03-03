@@ -1,4 +1,4 @@
-package com.nachtgeistw.impurebird.ui.setting;
+package com.nachtgeistw.impurebird.BirdMainUI.setting;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

@@ -1,4 +1,4 @@
-package com.nachtgeistw.impurebird.ui.send;
+package com.nachtgeistw.impurebird.BirdMainUI.send;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

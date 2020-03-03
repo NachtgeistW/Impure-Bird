@@ -1,4 +1,4 @@
-package com.nachtgeistw.impurebird.ui.setting;
+package com.nachtgeistw.impurebird.BirdMainUI.setting;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

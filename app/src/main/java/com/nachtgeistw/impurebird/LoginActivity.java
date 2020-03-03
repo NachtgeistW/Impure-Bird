@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import com.nachtgeistw.impurebird.util.util;
 
+import java.util.Objects;
+
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -63,8 +65,7 @@ public class LoginActivity extends Activity {
         util.ActivityCollector.addActivity(this);
 
         // Shared Preferences
-        mSharedPreferences = getApplicationContext().getSharedPreferences(
-                "MyPref", 0);
+        mSharedPreferences = getApplicationContext().getSharedPreferences("MyPref", 0);
         if (!isTwitterLoggedInAlready()) {
             Log.i("Twitter", "LoginActivity > onCreate > isNotLoginIn");
 
@@ -119,8 +120,6 @@ public class LoginActivity extends Activity {
         } catch (TwitterException e) {
             e.printStackTrace();
         }
-
-
     }
 
     /**
@@ -186,7 +185,7 @@ public class LoginActivity extends Activity {
                 // 获取不到 AuthenticationURL 时抛出异常的 Toast。
                 // 在中国大陆这种事情太正常了，不包会闪退
                 // 登陆不上不关本组的事
-                Log.i("Twitter", e.getMessage());
+                Log.i("Twitter", Objects.requireNonNull(e.getMessage()));
                 if (!isTwitterLoggedInAlready())
                     Toast.makeText(getApplicationContext(), R.string.get_auth_url_fail, Toast.LENGTH_LONG).show();
                 btnShareTwitter.setVisibility(View.VISIBLE);
@@ -212,7 +211,6 @@ public class LoginActivity extends Activity {
             myWebView.setVisibility(View.GONE);
             btnShareTwitter.setVisibility(View.VISIBLE);
         }
-
     }
 
     @Override
@@ -229,5 +227,4 @@ public class LoginActivity extends Activity {
         }
         super.onBackPressed();
     }
-
 }

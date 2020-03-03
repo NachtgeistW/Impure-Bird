@@ -1,4 +1,4 @@
-package com.nachtgeistw.impurebird.ui.slideshow;
+package com.nachtgeistw.impurebird.BirdMainUI.slideshow;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

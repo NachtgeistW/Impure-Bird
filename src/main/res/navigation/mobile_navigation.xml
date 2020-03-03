@@ -7,37 +7,37 @@
 
     <fragment
             android:id="@+id/nav_home"
-            android:name="com.nachtgeistw.impurebird.ui.home.HomeFragment"
+            android:name="com.nachtgeistw.impurebird.BirdMainUI.home.HomeFragment"
             android:label="@string/menu_home"
             tools:layout="@layout/fragment_home" />
 
     <fragment
             android:id="@+id/nav_gallery"
-            android:name="com.nachtgeistw.impurebird.ui.gallery.GalleryFragment"
+            android:name="com.nachtgeistw.impurebird.BirdMainUI.gallery.GalleryFragment"
             android:label="@string/menu_gallery"
             tools:layout="@layout/fragment_gallery" />
 
     <fragment
             android:id="@+id/nav_slideshow"
-            android:name="com.nachtgeistw.impurebird.ui.slideshow.SlideshowFragment"
+            android:name="com.nachtgeistw.impurebird.BirdMainUI.slideshow.SlideshowFragment"
             android:label="@string/menu_slideshow"
             tools:layout="@layout/fragment_slideshow" />
 
     <fragment
             android:id="@+id/nav_setting"
-            android:name="com.nachtgeistw.impurebird.ui.setting.SettingFragment"
+            android:name="com.nachtgeistw.impurebird.BirdMainUI.setting.SettingFragment"
             android:label="@string/setting"
             tools:layout="@layout/fragment_setting" />
 
     <fragment
             android:id="@+id/nav_share"
-            android:name="com.nachtgeistw.impurebird.ui.share.ShareFragment"
+            android:name="com.nachtgeistw.impurebird.BirdMainUI.share.ShareFragment"
             android:label="@string/menu_share"
             tools:layout="@layout/fragment_share" />
 
     <fragment
             android:id="@+id/nav_send"
-            android:name="com.nachtgeistw.impurebird.ui.send.SendFragment"
+            android:name="com.nachtgeistw.impurebird.BirdMainUI.send.SendFragment"
             android:label="@string/menu_send"
             tools:layout="@layout/fragment_send" />
 </navigation>

@@ -27,4 +27,5 @@
     <string name="pull_home_timeline_failed">Could not access tweet now. Please try again later.</string>
     <string name="exit">Exit</string>
     <string name="communicate">Communicate</string>
+    <string name="title_activity_tweet_detail">Tweet Detail</string>
 </resources>

@@ -27,7 +27,7 @@ import twitter4j.Status;
 import twitter4j.TwitterException;
 
 import static com.nachtgeistw.impurebird.BirdMainInterface.twitter_main;
-import static com.nachtgeistw.impurebird.util.util.getBitmapFromURL;
+import static com.nachtgeistw.impurebird.util.image.getBitmapFromURL;
 
 public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> {
 
@@ -47,16 +47,16 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             super(view);
             tweetView = view;
             //关联组件
-            username = itemView.findViewById(R.id.user_name);
-            userhead = itemView.findViewById(R.id.user_avatar);
-            usertext = itemView.findViewById(R.id.user_text);
+            username = itemView.findViewById(R.id.detail_page_user_name);
+            userhead = itemView.findViewById(R.id.detail_page_user_avatar);
+            usertext = itemView.findViewById(R.id.detail_page_user_text);
             favorite = itemView.findViewById(R.id.icon_not_favorite);
             comment = itemView.findViewById(R.id.icon_not_comment);
             retweet = itemView.findViewById(R.id.icon_not_retweet);
-            images[0] = itemView.findViewById(R.id.user_image1);
-            images[1] = itemView.findViewById(R.id.user_image2);
-            images[2] = itemView.findViewById(R.id.user_image3);
-            images[3] = itemView.findViewById(R.id.user_image4);
+            images[0] = itemView.findViewById(R.id.TWEET_PIC_1);
+            images[1] = itemView.findViewById(R.id.TWEET_PIC_2);
+            images[2] = itemView.findViewById(R.id.TWEET_PIC_3);
+            images[3] = itemView.findViewById(R.id.TWEET_PIC_4);
         }
     }
 
@@ -70,11 +70,14 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //这里获取
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.tweet_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.tweet_item,
+                parent, false);
 
         //设置点击事件
         final ViewHolder holder = new ViewHolder(view);
+
         //点击除了图片以外的地方都跳到详情界面
+        //Jump to tweet detail page
         holder.tweetView.setOnClickListener(v -> {
             //从mTweetList中找出点击的是下标是几的然后通过intent传数据并跳转
             int position = holder.getAdapterPosition();
@@ -84,20 +87,20 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             Bundle bundle = new Bundle();
 
             //这里往bundle放详细页面所需要的数据
-            bundle.putString("user_name",status.getUser().getName());
-            bundle.putString("user_tweet",status.getText());
-            bundle.putString("user_head",status.getUser().get400x400ProfileImageURLHttps());
+            bundle.putString("user_name", status.getUser().getName());
+            bundle.putString("user_tweet", status.getText());
+            bundle.putString("user_avatar", status.getUser().get400x400ProfileImageURLHttps());
 
             if (status.getMediaEntities() != null) {
                 int i = 0;
-                String user_image = "user_image" +String.valueOf(0);
+                String user_image = "user_image" + String.valueOf(0);
                 for (MediaEntity media : status.getMediaEntities()) {
                     bundle.putString(user_image, media.getMediaURLHttps());
                     Log.e("@@@@@@图片", media.getMediaURLHttps());
                     i++;//这里分开写是为了判断有几张图片
                     user_image = "user_image" + String.valueOf(i);
                 }
-                bundle.putInt("imagenum",i);//把图片数也传过去
+                bundle.putInt("pic_num", i);//把图片数也传过去
             }
             //整个bundle塞进去
             intent.putExtras(bundle);
@@ -105,128 +108,118 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         });
 
         //点头像就跳到那个人的主页
-        holder.userhead.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = holder.getAdapterPosition();
-                Status status = mTweetList.get(position);
-                //如果头像是自己就不跳转
-                if(userid == status.getUser().getId()){
-                    Intent intent = new Intent(context, UserHomeActivity.class);
-                    intent.putExtra("userid",status.getUser().getId());
-                    context.startActivity(intent);
-                }else{
-                    Intent intent = new Intent(context, UserHomeActivity.class);
-                    intent.putExtra("userid",status.getUser().getId());
-                    context.startActivity(intent);
-                }
+        holder.userhead.setOnClickListener(v -> {
+            int position = holder.getAdapterPosition();
+            Status status = mTweetList.get(position);
+//            //如果头像是自己就不跳转//暂时取消掉
+//            if (userid == status.getUser().getId()) {
+//                Intent intent = new Intent(context, UserHomeActivity.class);
+//                intent.putExtra("userid", status.getUser().getId());
+//                context.startActivity(intent);
+//            } else {
+            Intent intent = new Intent(context, UserHomeActivity.class);
+            intent.putExtra("userid", status.getUser().getId());
+            context.startActivity(intent);
+//            }
 
-            }
         });
-        holder.images[0].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = holder.getAdapterPosition();
-                Status tweet = mTweetList.get(position);
-                String[] img_url = new String[4];
-                for(int temp=0;temp<4;temp++){
-                    img_url[temp] = null;
-                }
-                if (tweet.getMediaEntities() != null){
-                    int i = 0;
-                    //img_url赋值四张图片的url
-                    for(MediaEntity media : tweet.getMediaEntities()){
-                        img_url[i] = media.getMediaURLHttps();
-                        i++;
-                    }
-                }
-                if(img_url[0]!=null) {
-                    Intent intent = new Intent(context, PicActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("url", img_url[0]);
-                    intent.putExtras(bundle);
-                    context.startActivity(intent);
+
+        holder.images[0].setOnClickListener(v -> {
+            int position = holder.getAdapterPosition();
+            Status tweet = mTweetList.get(position);
+            String[] img_url = new String[4];
+            for (int temp = 0; temp < 4; temp++) {
+                img_url[temp] = null;
+            }
+            if (tweet.getMediaEntities() != null) {
+                int i = 0;
+                //img_url赋值四张图片的url
+                for (MediaEntity media : tweet.getMediaEntities()) {
+                    img_url[i] = media.getMediaURLHttps();
+                    i++;
                 }
             }
-        });
-        holder.images[1].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = holder.getAdapterPosition();
-                Status tweet = mTweetList.get(position);
-                String[] img_url = new String[4];
-                for(int temp=0;temp<4;temp++){
-                    img_url[temp] = null;
-                }
-                if (tweet.getMediaEntities() != null){
-                    int i = 0;
-                    //img_url赋值四张图片的url
-                    for(MediaEntity media : tweet.getMediaEntities()){
-                        img_url[i] = media.getMediaURLHttps();
-                        i++;
-                    }
-                }
-                if(img_url[1]!=null){
-                    Intent intent = new Intent(context, PicActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("url",img_url[1]);
-                    intent.putExtras(bundle);
-                    context.startActivity(intent);
-                }
+            if (img_url[0] != null) {
+                Intent intent = new Intent(context, PicActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("url", img_url[0]);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
             }
         });
-        holder.images[2].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = holder.getAdapterPosition();
-                Status tweet = mTweetList.get(position);
-                String[] img_url = new String[4];
-                for(int temp=0;temp<4;temp++){
-                    img_url[temp] = null;
-                }
-                if (tweet.getMediaEntities() != null){
-                    int i = 0;
-                    //img_url赋值四张图片的url
-                    for(MediaEntity media : tweet.getMediaEntities()){
-                        img_url[i] = media.getMediaURLHttps();
-                        i++;
-                    }
-                }
-                if(img_url[2]!=null) {
-                    Intent intent = new Intent(context, PicActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("url", img_url[2]);
-                    intent.putExtras(bundle);
-                    context.startActivity(intent);
+
+        holder.images[1].setOnClickListener(v -> {
+            int position = holder.getAdapterPosition();
+            Status tweet = mTweetList.get(position);
+            String[] img_url = new String[4];
+            for (int temp = 0; temp < 4; temp++) {
+                img_url[temp] = null;
+            }
+            if (tweet.getMediaEntities() != null) {
+                int i = 0;
+                //img_url赋值四张图片的url
+                for (MediaEntity media : tweet.getMediaEntities()) {
+                    img_url[i] = media.getMediaURLHttps();
+                    i++;
                 }
             }
-        });
-        holder.images[3].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = holder.getAdapterPosition();
-                Status tweet = mTweetList.get(position);
-                String[] img_url = new String[4];
-                for(int temp=0;temp<4;temp++){
-                    img_url[temp] = null;
-                }
-                if (tweet.getMediaEntities() != null){
-                    int i = 0;
-                    //img_url赋值四张图片的url
-                    for(MediaEntity media : tweet.getMediaEntities()){
-                        img_url[i] = media.getMediaURLHttps();
-                        i++;
-                    }
-                }
-                if(img_url[3]!=null) {
-                    Intent intent = new Intent(context, PicActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("url", img_url[3]);
-                    intent.putExtras(bundle);
-                    context.startActivity(intent);
-                }
+            if (img_url[1] != null) {
+                Intent intent = new Intent(context, PicActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("url", img_url[1]);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
             }
         });
+
+        holder.images[2].setOnClickListener(v -> {
+            int position = holder.getAdapterPosition();
+            Status tweet = mTweetList.get(position);
+            String[] img_url = new String[4];
+            for (int temp = 0; temp < 4; temp++) {
+                img_url[temp] = null;
+            }
+            if (tweet.getMediaEntities() != null) {
+                int i = 0;
+                //img_url赋值四张图片的url
+                for (MediaEntity media : tweet.getMediaEntities()) {
+                    img_url[i] = media.getMediaURLHttps();
+                    i++;
+                }
+            }
+            if (img_url[2] != null) {
+                Intent intent = new Intent(context, PicActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("url", img_url[2]);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
+            }
+        });
+
+        holder.images[3].setOnClickListener(v -> {
+            int position = holder.getAdapterPosition();
+            Status tweet = mTweetList.get(position);
+            String[] img_url = new String[4];
+            for (int temp = 0; temp < 4; temp++) {
+                img_url[temp] = null;
+            }
+            if (tweet.getMediaEntities() != null) {
+                int i = 0;
+                //img_url赋值四张图片的url
+                for (MediaEntity media : tweet.getMediaEntities()) {
+                    img_url[i] = media.getMediaURLHttps();
+                    i++;
+                }
+            }
+            if (img_url[3] != null) {
+                Intent intent = new Intent(context, PicActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("url", img_url[3]);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
+            }
+        });
+
         // 转发的click listener
         holder.retweet.setOnClickListener(v -> {
             int position = holder.getAdapterPosition();
@@ -250,35 +243,35 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         holder.username.setText(tweet.getUser().getName());
         holder.usertext.setText(tweet.getText());
         String[] img_url = new String[4];
-        for(int temp=0;temp<4;temp++){
+        for (int temp = 0; temp < 4; temp++) {
             img_url[temp] = null;
         }
 
         //设置头像就用了下面两句
         DownLoadHead task = new DownLoadHead(holder.userhead);
-        // holder.userhead.setImageBitmap(tweet.getUser_head());
         task.execute(tweet.getUser().get400x400ProfileImageURLHttps());
 
-        if (tweet.getMediaEntities() != null){
-            for(int temp=0;temp<4;temp++){
+        if (tweet.getMediaEntities() != null) {
+            for (int temp = 0; temp < 4; temp++) {
                 img_url[temp] = null;
             }
             int i = 0;
             //img_url赋值四张图片的url
-            for(MediaEntity media : tweet.getMediaEntities()){
+            for (MediaEntity media : tweet.getMediaEntities()) {
                 img_url[i] = media.getMediaURLHttps();
-                Log.e("**********图片地址", String.valueOf(0)+"张"+img_url[i]);
+                Log.e("**********图片地址", String.valueOf(0) + "张" + img_url[i]);
                 i++;
             }
-            for(int j = 0;j < i;j++){
+            for (int j = 0; j < i; j++) {
                 DownLoadHead image1 = new DownLoadHead(holder.images[j]);
                 image1.execute(img_url[j]);
             }
-            for(int j = i;j < 4;j++){
+            for (int j = i; j < 4; j++) {
                 DownLoadHead image1 = new DownLoadHead(holder.images[j]);
                 image1.execute("https://tvax1.sinaimg.cn/large/81883f4dgy1g952zab07aj206i07a741.jpg");
             }
         }
+
         //设置头像、RT和赞
         new DownLoadHead(holder.userhead).execute(tweet.getUser().get400x400ProfileImageURLHttps());
         new InitStatusFavorite(holder.favorite).execute(tweet);
@@ -294,20 +287,18 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         private ImageView mImageView;
         String url;
 
-        public DownLoadHead(ImageView imageView) {
+        DownLoadHead(ImageView imageView) {
             mImageView = imageView;
         }
 
         @Override
         protected Bitmap doInBackground(String... params) {
             url = params[0];
-            Bitmap bitmap = downLoadBitmap(url);
-            return bitmap;
+            return downLoadBitmap(url);
         }
 
         private Bitmap downLoadBitmap(String url) {
-            Bitmap bimage = getBitmapFromURL(url);
-            return bimage;
+            return getBitmapFromURL(url);
         }
 
         @Override
@@ -333,6 +324,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             }
         }
     }
+
     // 设置赞的初始状态
     class InitStatusFavorite extends AsyncTask<twitter4j.Status, Void, Boolean> {
         ImageView favorite;

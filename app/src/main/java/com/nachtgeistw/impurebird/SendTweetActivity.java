@@ -11,6 +11,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import java.util.Objects;
+
 import static com.nachtgeistw.impurebird.util.util.tweet_content;
 
 
@@ -23,6 +25,8 @@ public class SendTweetActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_tweet);
         editText = findViewById(R.id.edit_text_tweet_info);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setHomeButtonEnabled(true);
     }
 
     //把按钮（菜单）设置到标题栏
@@ -36,13 +40,20 @@ public class SendTweetActivity extends AppCompatActivity {
     //监听菜单按钮
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_send) {
-            String tweet = editText.getText().toString();
-            Intent intent = new Intent();
-            intent.putExtra(tweet_content, tweet);
-            //把获取到的推文内容传回上级Activity
-            setResult(RESULT_OK, intent);
-            finish();
+        switch (item.getItemId()) {
+            //Send button
+            case R.id.action_send:
+                String tweet = editText.getText().toString();
+                Intent intent = new Intent();
+                intent.putExtra(tweet_content, tweet);
+                //把获取到的推文内容传回上级Activity
+                setResult(RESULT_OK, intent);
+                finish();
+                break;
+            //return button
+            case android.R.id.home:
+                finish();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

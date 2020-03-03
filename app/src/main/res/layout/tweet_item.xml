@@ -11,7 +11,7 @@
 
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/user_avatar"
+        android:id="@+id/detail_page_user_avatar"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentLeft="true"
@@ -22,24 +22,24 @@
         android:src="@drawable/ic_person_black_24dp" />
 
     <TextView
-        android:id="@+id/user_name"
+        android:id="@+id/detail_page_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
-        android:layout_toEndOf="@id/user_avatar"
+        android:layout_toEndOf="@id/detail_page_user_avatar"
         android:textStyle="bold"/>
     //推文user_text
 
     <TextView
-            android:id="@+id/user_text"
+            android:id="@+id/detail_page_user_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/user_avatar"
+            android:layout_below="@id/detail_page_user_avatar"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="10dp"
-            android:layout_toRightOf="@id/user_avatar" />
+            android:layout_toRightOf="@id/detail_page_user_avatar" />
     <!--    android:layout_below="@id/user_text"-->
     <LinearLayout
         android:orientation="horizontal"
@@ -50,32 +50,32 @@
         android:layout_marginRight="9dp"
         android:layout_marginTop="9dp"
         android:layout_marginBottom="0dp"
-        android:layout_below="@id/user_text"
-        android:layout_toRightOf="@id/user_avatar">
+        android:layout_below="@id/detail_page_user_text"
+        android:layout_toRightOf="@id/detail_page_user_avatar">
 
         <ImageView
-            android:id="@+id/user_image1"
+            android:id="@+id/TWEET_PIC_1"
             android:layout_width="0dp"
             android:layout_height="80dip"
             android:layout_weight="1"
             android:layout_marginRight="3dp"
             android:scaleType="centerCrop"/>
         <ImageView
-            android:id="@+id/user_image2"
+            android:id="@+id/TWEET_PIC_2"
             android:layout_width="0dp"
             android:layout_height="80dip"
             android:layout_marginRight="3dp"
             android:layout_weight="1"
             android:scaleType="centerCrop"/>
         <ImageView
-            android:id="@+id/user_image3"
+            android:id="@+id/TWEET_PIC_3"
             android:layout_width="0dp"
             android:layout_height="80dip"
             android:layout_marginRight="3dp"
             android:layout_weight="1"
             android:scaleType="centerCrop"/>
         <ImageView
-            android:id="@+id/user_image4"
+            android:id="@+id/TWEET_PIC_4"
             android:layout_width="0dp"
             android:layout_height="80dip"
             android:layout_marginRight="3dp"
@@ -91,16 +91,16 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="100dip"
         android:layout_marginBottom="8dip"
-        android:layout_below="@id/user_text"
-        android:layout_toRightOf="@id/user_avatar"
+        android:layout_below="@id/detail_page_user_text"
+        android:layout_toRightOf="@id/detail_page_user_avatar"
         android:src="@drawable/ic_not_favorite"  />
 
     <ImageView
         android:id="@+id/icon_not_comment"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_below="@id/user_text"
-        android:layout_alignParentBottom="@id/user_text"
+        android:layout_below="@id/detail_page_user_text"
+        android:layout_alignParentBottom="@id/detail_page_user_text"
         android:layout_gravity="center_vertical"
         android:layout_marginTop="100dip"
         android:layout_marginStart="70dp"
@@ -112,7 +112,7 @@
         android:id="@+id/icon_not_retweet"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_below="@id/user_text"
+        android:layout_below="@id/detail_page_user_text"
         android:layout_gravity="center_vertical"
         android:layout_marginTop="100dip"
         android:layout_marginBottom="8dip"

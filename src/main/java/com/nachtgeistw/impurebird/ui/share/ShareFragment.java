@@ -1,4 +1,4 @@
-package com.nachtgeistw.impurebird.ui.share;
+package com.nachtgeistw.impurebird.BirdMainUI.share;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

@@ -1,4 +1,4 @@
-package com.nachtgeistw.impurebird.ui.share;
+package com.nachtgeistw.impurebird.BirdMainUI.share;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

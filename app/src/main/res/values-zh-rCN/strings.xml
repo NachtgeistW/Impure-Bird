@@ -14,4 +14,5 @@
     <string name="pull_home_timeline_failed">暂时无法获取推文。请稍后重试。</string>
     <string name="communicate">Communicate</string>
     <string name="exit">退出</string>
+    <string name="title_activity_tweet_detail">推文详情</string>
 </resources>

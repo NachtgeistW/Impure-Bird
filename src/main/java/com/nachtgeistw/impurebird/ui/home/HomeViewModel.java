@@ -1,4 +1,4 @@
-package com.nachtgeistw.impurebird.ui.home;
+package com.nachtgeistw.impurebird.BirdMainUI.home;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

@@ -19,8 +19,12 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.jakewharton.disklrucache.DiskLruCache;
 import com.nachtgeistw.impurebird.util.BaseAppCompatActivity;
 import com.nachtgeistw.impurebird.util.util;
+
+import java.io.IOException;
+import java.io.OutputStream;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -31,9 +35,13 @@ import twitter4j.conf.ConfigurationBuilder;
 import static com.nachtgeistw.impurebird.LoginActivity.PREF_KEY_TWITTER_LOGIN;
 import static com.nachtgeistw.impurebird.LoginActivity.TWITTER_CONSUMER_KEY;
 import static com.nachtgeistw.impurebird.LoginActivity.TWITTER_CONSUMER_SECRET;
+import static com.nachtgeistw.impurebird.util.cache.downloadUrlToStream;
+import static com.nachtgeistw.impurebird.util.cache.openDiskLruCache;
 import static com.nachtgeistw.impurebird.util.util.ActivityCollector;
 import static com.nachtgeistw.impurebird.util.util.USER_NICKNAME;
 import static com.nachtgeistw.impurebird.util.util.USER_NAME;
+import static com.nachtgeistw.impurebird.util.util.hashKeyForDisk;
+import static com.nachtgeistw.impurebird.util.util.utilDiskLruCache;
 import static com.nachtgeistw.impurebird.util.util.tweet_content;
 import static com.nachtgeistw.impurebird.util.util.utilSharedPreferences;
 
@@ -79,14 +87,15 @@ public class BirdMainInterface extends BaseAppCompatActivity {
         TextView userNickname = headerView.findViewById(R.id.nav_header_user_nickname);
         TextView userName = headerView.findViewById(R.id.nav_header_user_name);
         utilSharedPreferences = getApplicationContext().getSharedPreferences("MyPref", 0);
+        utilDiskLruCache = openDiskLruCache(getApplicationContext());
         if (utilSharedPreferences.contains(USER_NAME)) {
+            GetUserInfo(utilSharedPreferences, utilDiskLruCache);
             userName.setText(utilSharedPreferences.getString(USER_NICKNAME, "1"));
             userNickname.setText(utilSharedPreferences.getString(USER_NAME, "2"));
         } else {
-            SetUserInfo(utilSharedPreferences);
+            GetUserInfo(utilSharedPreferences, utilDiskLruCache);
             userName.setText(utilSharedPreferences.getString(USER_NICKNAME, "3"));
             userNickname.setText(utilSharedPreferences.getString(USER_NAME, "4"));
-
         }
 
         // Passing each menu ID as a set of Ids because each
@@ -116,18 +125,32 @@ public class BirdMainInterface extends BaseAppCompatActivity {
 
     }
 
-    static void SetUserInfo(SharedPreferences s) {
+    static void GetUserInfo(SharedPreferences s, DiskLruCache d) {
 
         final String[] userNickname = new String[1];
         final String[] userName = new String[1];
+        final String[] avatarUrl = new String[1];
 
         new Thread(() -> {
             try {
                 userName[0] = twitter_main.verifyCredentials().getName();
                 userNickname[0] = twitter_main.verifyCredentials().getScreenName();
-                Log.i("Twitter", "BirdMain > " + twitter_main.verifyCredentials().getScreenName());
-                Log.i("Twitter", "BirdMain > " + twitter_main.verifyCredentials().getName());
-            } catch (TwitterException e) {
+//                avatarUrl[0] = "http://bimgs.plmeizi.com/images/bing/2016/Dongjiang_ZH-CN10434068279_1920x1080.jpg";
+                avatarUrl[0] = twitter_main.verifyCredentials().get400x400ProfileImageURLHttps();
+                String key = hashKeyForDisk(avatarUrl[0]);
+                DiskLruCache.Editor editor = d.edit(key);
+                if (editor != null) {
+                    OutputStream outputStream = editor.newOutputStream(0);
+                    boolean b = downloadUrlToStream(avatarUrl[0], outputStream);
+                    Log.e("Twitter", "BirdMain > GetUserInfo > " + b);
+                    if (b) {
+                        editor.commit();
+                    } else {
+                        editor.abort();
+                    }
+                }
+                d.flush();
+            } catch (TwitterException | IOException e) {
                 e.printStackTrace();
             }
             SharedPreferences.Editor e = s.edit();

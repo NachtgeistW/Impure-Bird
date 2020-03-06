@@ -6,6 +6,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
             android:allowBackup="true"
@@ -15,6 +16,25 @@
             android:theme="@style/AppTheme">
         <!-- use configChanges to prevent activity restart when orientation changes -->
         <activity
+                android:name=".SplashActivity"
+                android:theme="@style/AppTheme.Start">
+            <intent-filter>
+                <action
+                        android:name="android.intent.action.MAIN"
+                        android:configChanges="orientation|screenSize" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+                android:name=".LoginActivity"
+                android:configChanges="orientation|screenSize">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
                 android:name=".BirdMainInterface"
                 android:configChanges="orientation|screenSize"
                 android:label="@string/title_activity_bird_main_interface"
@@ -23,10 +43,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+                android:name=".UserHomeActivity"
+                android:configChanges="orientation|screenSize" />
+
         <activity
                 android:name=".DetailPageActivity"
                 android:configChanges="orientation|screenSize"
                 android:label="@string/title_activity_tweet_detail" />
+
         <activity
                 android:name=".SendTweetActivity"
                 android:configChanges="orientation|screenSize"
@@ -35,19 +61,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-                android:name=".LoginActivity"
-                android:configChanges="orientation|screenSize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+
         <activity android:name=".PicActivity" />
-        <activity
-                android:name=".UserHomeActivity"
-                android:configChanges="orientation|screenSize" />
+        <activity android:name=".util.BaseAppCompatActivity" />
+
     </application>
 
 </manifest>

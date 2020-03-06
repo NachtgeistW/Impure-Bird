@@ -1,46 +1,32 @@
 package com.nachtgeistw.impurebird.util;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.ImageView;
 
-import com.nachtgeistw.impurebird.DetailPageActivity;
-import com.nachtgeistw.impurebird.PicActivity;
-import com.nachtgeistw.impurebird.R;
+import com.jakewharton.disklrucache.DiskLruCache;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
-import twitter4j.Status;
 
 public class util {
     public static String tweet_content = "tweet_content";
 
-    public static class ActivityCollector{
+    public static class ActivityCollector {
         static List<Activity> activityList = new ArrayList<>();
 
-        public static void addActivity(Activity activity){
+        public static void addActivity(Activity activity) {
             activityList.add(activity);
         }
 
-        public static void removeActivity(Activity activity){
+        public static void removeActivity(Activity activity) {
             activityList.remove(activity);
         }
 
-        public static void finishAll(){
-            for (Activity activity: activityList){
-                if(!activity.isFinishing()){
+        public static void finishAll() {
+            for (Activity activity : activityList) {
+                if (!activity.isFinishing()) {
                     activity.finish();
                 }
             }
@@ -48,7 +34,33 @@ public class util {
         }
     }
 
+    public static DiskLruCache utilDiskLruCache;
+
     public static final String USER_NAME = "user_name";
     public static final String USER_NICKNAME = "user_nickname";
     public static SharedPreferences utilSharedPreferences;
+
+    public static String hashKeyForDisk(String key) {
+        String cacheKey;
+        try {
+            final MessageDigest mDigest = MessageDigest.getInstance("MD5");
+            mDigest.update(key.getBytes());
+            cacheKey = bytesToHexString(mDigest.digest());
+        } catch (NoSuchAlgorithmException e) {
+            cacheKey = String.valueOf(key.hashCode());
+        }
+        return cacheKey;
+    }
+
+    private static String bytesToHexString(byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        for (byte aByte : bytes) {
+            String hex = Integer.toHexString(0xFF & aByte);
+            if (hex.length() == 1) {
+                sb.append('0');
+            }
+            sb.append(hex);
+        }
+        return sb.toString();
+    }
 }

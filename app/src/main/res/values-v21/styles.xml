@@ -5,4 +5,13 @@
         <item name="windowNoTitle">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
+
+    <!-- Use in Start Page. -->
+    <style name="AppTheme.Start" parent="AppTheme.NoToolbar">
+        <item name="android:windowBackground">@drawable/ic_splash</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:gravity">top</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
 </resources>

@@ -97,6 +97,7 @@ public class LoginActivity extends Activity {
             Log.i("Twitter", "LoginActivity > onCreate > isLoginIn");
             Intent intent = new Intent(LoginActivity.this, BirdMainInterface.class);
             startActivity(intent);
+            finish();
         }
     }
 
@@ -157,6 +158,7 @@ public class LoginActivity extends Activity {
 
             Intent intent = new Intent(LoginActivity.this, BirdMainInterface.class);
             startActivity(intent);
+            finish();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -13,6 +13,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Objects;
 
+import javax.net.ssl.HttpsURLConnection;
+
 public class image {
 
     public static void setTweetImage(Bundle bundle, int picNum, ImageView... list) throws Exception {
@@ -75,7 +77,7 @@ public class image {
         try {
             Log.e("src", src);
             URL url = new URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
             connection.setDoInput(true);
             connection.connect();
             InputStream input = connection.getInputStream();

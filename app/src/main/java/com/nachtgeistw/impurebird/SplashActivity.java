@@ -1,12 +1,9 @@
 package com.nachtgeistw.impurebird;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Window;
 
-import com.nachtgeistw.impurebird.util.BaseAppCompatActivity;
+import com.nachtgeistw.impurebird.Util.BaseAppCompatActivity;
 
 public class SplashActivity extends BaseAppCompatActivity {
 

@@ -17,7 +17,7 @@ import twitter4j.Status;
 import twitter4j.TwitterException;
 
 import com.nachtgeistw.impurebird.R;
-import com.nachtgeistw.impurebird.util.TweetAdapter;
+import com.nachtgeistw.impurebird.Util.TweetAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

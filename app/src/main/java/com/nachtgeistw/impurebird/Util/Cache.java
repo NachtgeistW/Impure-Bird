@@ -1,10 +1,13 @@
-package com.nachtgeistw.impurebird.util;
+package com.nachtgeistw.impurebird.Util;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.ImageView;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -12,7 +15,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Objects;
 
@@ -22,7 +24,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 //https://blog.csdn.net/guolin_blog/article/details/28863651
 
-public class cache {
+public class Cache {
     /**
      * Get cache directory
      */
@@ -104,5 +106,24 @@ public class cache {
             }
         }
         return false;
+    }
+
+    /**
+     * @param imageUrlKey the MD5 key of image url
+     * @param diskLruCache the DLC that stores of this image key
+     * @param imageView the imageView to be set
+     * @throws IOException if set failed
+     */
+    public static void setImageFromCache(String imageUrlKey, DiskLruCache diskLruCache, ImageView imageView) throws IOException {
+        try {
+            DiskLruCache.Snapshot snapShot = diskLruCache.get(imageUrlKey);
+            if (snapShot != null) {
+                InputStream is = snapShot.getInputStream(0);
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+                imageView.setImageBitmap(bitmap);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

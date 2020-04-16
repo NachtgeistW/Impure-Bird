@@ -1,4 +1,4 @@
-package com.nachtgeistw.impurebird.util;
+package com.nachtgeistw.impurebird.Util;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -10,7 +10,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class util {
+public class Util {
     public static String tweet_content = "tweet_content";
 
     public static class ActivityCollector {
@@ -38,6 +38,9 @@ public class util {
 
     public static final String USER_NAME = "user_name";
     public static final String USER_NICKNAME = "user_nickname";
+    public static final String USER_AVATAR_URL = "user_avatar_url";
+    public static final String USER_PROFILE_BANNER_URL = "user_profile_banner_url";
+
     public static SharedPreferences utilSharedPreferences;
 
     public static String hashKeyForDisk(String key) {

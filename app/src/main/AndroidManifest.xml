@@ -13,7 +13,9 @@
             android:icon="@mipmap/ic_cat_butt"
             android:label="Little Pussy"
             android:supportsRtl="true"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:usesCleartextTraffic="true"
+            tools:targetApi="m">
         <!-- use configChanges to prevent activity restart when orientation changes -->
         <activity
                 android:name=".SplashActivity"
@@ -64,7 +66,7 @@
 
 
         <activity android:name=".PicActivity" />
-        <activity android:name=".util.BaseAppCompatActivity" />
+        <activity android:name=".Util.BaseAppCompatActivity" />
 
     </application>
 

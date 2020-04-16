@@ -8,7 +8,7 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import static com.nachtgeistw.impurebird.util.image.getBitmapFromURL;
+import static com.nachtgeistw.impurebird.Util.Image.getBitmapFromURL;
 
 public class PicActivity extends AppCompatActivity {
 

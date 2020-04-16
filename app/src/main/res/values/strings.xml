@@ -28,4 +28,8 @@
     <string name="exit">Exit</string>
     <string name="communicate">Communicate</string>
     <string name="title_activity_tweet_detail">Tweet Detail</string>
+    <string name="like">Like</string>
+    <string name="comment">Comment</string>
+    <string name="retweet">Retweet</string>
+    <string name="pull_status_failed">拉取信息失败</string>
 </resources>

@@ -83,7 +83,7 @@
             android:scaleType="centerCrop"/>
     </LinearLayout>
     <ImageView
-        android:id="@+id/icon_not_favorite"
+        android:id="@+id/detail_page_not_like"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_gravity="center_vertical"
@@ -96,7 +96,7 @@
         android:src="@drawable/ic_not_favorite"  />
 
     <ImageView
-        android:id="@+id/icon_not_comment"
+        android:id="@+id/detail_page_not_comment"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_below="@id/detail_page_user_text"
@@ -105,7 +105,7 @@
         android:layout_marginTop="100dip"
         android:layout_marginStart="70dp"
         android:layout_marginBottom="8dip"
-        android:layout_toRightOf="@id/icon_not_favorite"
+        android:layout_toRightOf="@id/detail_page_not_like"
         android:src="@drawable/ic_not_comment" />
 
     <ImageView
@@ -117,6 +117,6 @@
         android:layout_marginTop="100dip"
         android:layout_marginBottom="8dip"
         android:layout_marginStart="70dp"
-        android:layout_toRightOf="@id/icon_not_comment"
+        android:layout_toRightOf="@id/detail_page_not_comment"
         android:src="@drawable/ic_not_repeat" />
 </RelativeLayout>

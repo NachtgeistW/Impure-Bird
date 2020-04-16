@@ -13,7 +13,7 @@ import android.widget.EditText;
 
 import java.util.Objects;
 
-import static com.nachtgeistw.impurebird.util.util.tweet_content;
+import static com.nachtgeistw.impurebird.Util.Util.tweet_content;
 
 
 public class SendTweetActivity extends AppCompatActivity {

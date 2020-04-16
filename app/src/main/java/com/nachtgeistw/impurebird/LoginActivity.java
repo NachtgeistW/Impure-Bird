@@ -14,7 +14,7 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.nachtgeistw.impurebird.util.util;
+import com.nachtgeistw.impurebird.Util.Util;
 
 import java.util.Objects;
 
@@ -62,7 +62,7 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        util.ActivityCollector.addActivity(this);
+        Util.ActivityCollector.addActivity(this);
 
         // Shared Preferences
         mSharedPreferences = getApplicationContext().getSharedPreferences("MyPref", 0);

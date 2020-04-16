@@ -1,5 +1,6 @@
-package com.nachtgeistw.impurebird.util;
+package com.nachtgeistw.impurebird.Util;
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -7,15 +8,19 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.jakewharton.disklrucache.DiskLruCache;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Objects;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class image {
+import static com.nachtgeistw.impurebird.Util.Cache.setImageFromCache;
+import static com.nachtgeistw.impurebird.Util.Util.USER_AVATAR_URL;
+
+public class Image {
 
     public static void setTweetImage(Bundle bundle, int picNum, ImageView... list) throws Exception {
         ImageView[] picList;
@@ -86,6 +91,13 @@ public class image {
             e.printStackTrace();
             Log.e("Exception", Objects.requireNonNull(e.getMessage()));
             return null;
+        }
+    }
+
+    public static void SetUserAvatar(SharedPreferences s, DiskLruCache d, ImageView imageView) throws IOException {
+        String avatarKey = s.getString(USER_AVATAR_URL, "");
+        if (!avatarKey.equals("")) {
+            setImageFromCache(avatarKey, d, imageView);
         }
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Impure Bird</string>
+    <string name="app_name">白鸟</string>
     <string name="menu_home">首页</string>
     <string name="action_settings">设置</string>
     <string name="login_in_with_twitter">登录到推特</string>
@@ -15,4 +15,7 @@
     <string name="communicate">Communicate</string>
     <string name="exit">退出</string>
     <string name="title_activity_tweet_detail">推文详情</string>
+    <string name="like">点赞</string>
+    <string name="comment">评论</string>
+    <string name="retweet">转发</string>
 </resources>

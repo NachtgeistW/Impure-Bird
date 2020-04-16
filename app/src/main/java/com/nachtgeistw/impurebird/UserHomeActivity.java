@@ -13,9 +13,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.nachtgeistw.impurebird.util.TweetAdapter;
+import com.nachtgeistw.impurebird.Util.TweetAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +34,6 @@ public class UserHomeActivity extends AppCompatActivity {
         setContentView(R.layout.fragment_gallery);
         Intent intent = getIntent();
         userId = intent.getLongExtra("userId", 0);
-        System.out.println(userId);
         //关联recycler组件
         recyclerView = findViewById((R.id.home_timeline_recyclerview));
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);

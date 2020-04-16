@@ -1,4 +1,4 @@
-package com.nachtgeistw.impurebird.util;
+package com.nachtgeistw.impurebird.Util;
 
 import android.content.Context;
 import android.content.Intent;
@@ -27,7 +27,7 @@ import twitter4j.Status;
 import twitter4j.TwitterException;
 
 import static com.nachtgeistw.impurebird.BirdMainInterface.twitter_main;
-import static com.nachtgeistw.impurebird.util.image.getBitmapFromURL;
+import static com.nachtgeistw.impurebird.Util.Image.getBitmapFromURL;
 
 public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> {
 
@@ -50,8 +50,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             username = itemView.findViewById(R.id.detail_page_user_name);
             userhead = itemView.findViewById(R.id.detail_page_user_avatar);
             usertext = itemView.findViewById(R.id.detail_page_user_text);
-            favorite = itemView.findViewById(R.id.icon_not_favorite);
-            comment = itemView.findViewById(R.id.icon_not_comment);
+            favorite = itemView.findViewById(R.id.detail_page_not_like);
+            comment = itemView.findViewById(R.id.detail_page_not_comment);
             retweet = itemView.findViewById(R.id.icon_not_retweet);
             images[0] = itemView.findViewById(R.id.TWEET_PIC_1);
             images[1] = itemView.findViewById(R.id.TWEET_PIC_2);
@@ -90,19 +90,20 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             bundle.putString("user_name", status.getUser().getName());
             bundle.putString("user_tweet", status.getText());
             bundle.putString("user_avatar", status.getUser().get400x400ProfileImageURLHttps());
+            bundle.putBoolean("is_rt_by_me", status.isRetweetedByMe());
+            bundle.putBoolean("is_like_by_me", status.isFavorited());
+            bundle.putLong("tweet_id", status.getId());
 
             if (status.getMediaEntities() != null) {
                 int i = 0;
                 String user_image = "user_image" + String.valueOf(0);
                 for (MediaEntity media : status.getMediaEntities()) {
                     bundle.putString(user_image, media.getMediaURLHttps());
-                    Log.e("@@@@@@图片", media.getMediaURLHttps());
                     i++;//这里分开写是为了判断有几张图片
                     user_image = "user_image" + String.valueOf(i);
                 }
                 bundle.putInt("pic_num", i);//把图片数也传过去
             }
-            //整个bundle塞进去
             intent.putExtras(bundle);
             context.startActivity(intent);
         });
@@ -120,8 +121,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             Intent intent = new Intent(context, UserHomeActivity.class);
             intent.putExtra("userid", status.getUser().getId());
             context.startActivity(intent);
-//            }
-
         });
 
         holder.images[0].setOnClickListener(v -> {
@@ -472,7 +471,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                     return error;
                 }
         }
-
 
         @Override
         protected void onPostExecute(Integer result) {

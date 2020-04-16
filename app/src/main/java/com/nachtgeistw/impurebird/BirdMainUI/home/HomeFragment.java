@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.nachtgeistw.impurebird.R;
-import com.nachtgeistw.impurebird.util.TweetAdapter;
+import com.nachtgeistw.impurebird.Util.TweetAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
